@@ -3,7 +3,7 @@ import './App.scss';
 import {Search} from './Search.js';
 import {Painting} from './Painting.js';
 
-class App extends PureComponent {
+export default class App extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,5 +25,3 @@ class App extends PureComponent {
     );
   }
 }
-
-export default App;
