@@ -8,7 +8,7 @@
     "google-map-react": "^2.1.10",
     "lodash": "^4.17.15",
     "lodash.template": "^4.5.0",
-    "node-sass": "^6.0.1",
+    "node-sass": "^7.0.0",
     "react": "^17.0.2",
     "react-dnd": "^14.0.4",
     "react-dnd-html5-backend": "^14.0.2",
