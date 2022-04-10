@@ -3,7 +3,8 @@ import './App.scss';
 import { Map } from './Map.js';
 import { paginate } from './Helpers.js';
 
-const WIKI_USER = `${process.env.REACT_APP_WIKI_TOKEN}`;
+const WIKI_TOKEN = `${process.env.REACT_APP_WIKI_TOKEN}`;
+const WIKI_USER = `${process.env.REACT_APP_WIKI_ACCT}`;
 
 export class Wiki extends Component {
   constructor(props) {
@@ -28,8 +29,8 @@ export class Wiki extends Component {
     let response = await fetch(url,
       {
         headers: {
-          'Authorization': `Bearer ${WIKI_USER}`,
-          'Api-User-Agent': 'art-api-react (jfitzcode@gmail.com)'
+          'Authorization': `Bearer ${WIKI_TOKEN}`,
+          'Api-User-Agent': WIKI_USER
         }
       }
     );
