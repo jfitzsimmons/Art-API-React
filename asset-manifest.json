@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/Art-API-React/static/css/main.6e08bedb.chunk.css",
-    "main.js": "/Art-API-React/static/js/main.bdb08fb2.chunk.js",
-    "main.js.map": "/Art-API-React/static/js/main.bdb08fb2.chunk.js.map",
+    "main.css": "/Art-API-React/static/css/main.f50c0349.chunk.css",
+    "main.js": "/Art-API-React/static/js/main.9be24df1.chunk.js",
+    "main.js.map": "/Art-API-React/static/js/main.9be24df1.chunk.js.map",
     "runtime-main.js": "/Art-API-React/static/js/runtime-main.592ffc11.js",
     "runtime-main.js.map": "/Art-API-React/static/js/runtime-main.592ffc11.js.map",
-    "static/js/2.2e32536c.chunk.js": "/Art-API-React/static/js/2.2e32536c.chunk.js",
-    "static/js/2.2e32536c.chunk.js.map": "/Art-API-React/static/js/2.2e32536c.chunk.js.map",
+    "static/js/2.6e8538a7.chunk.js": "/Art-API-React/static/js/2.6e8538a7.chunk.js",
+    "static/js/2.6e8538a7.chunk.js.map": "/Art-API-React/static/js/2.6e8538a7.chunk.js.map",
     "index.html": "/Art-API-React/index.html",
-    "static/css/main.6e08bedb.chunk.css.map": "/Art-API-React/static/css/main.6e08bedb.chunk.css.map",
-    "static/js/2.2e32536c.chunk.js.LICENSE.txt": "/Art-API-React/static/js/2.2e32536c.chunk.js.LICENSE.txt"
+    "static/css/main.f50c0349.chunk.css.map": "/Art-API-React/static/css/main.f50c0349.chunk.css.map",
+    "static/js/2.6e8538a7.chunk.js.LICENSE.txt": "/Art-API-React/static/js/2.6e8538a7.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.592ffc11.js",
-    "static/js/2.2e32536c.chunk.js",
-    "static/css/main.6e08bedb.chunk.css",
-    "static/js/main.bdb08fb2.chunk.js"
+    "static/js/2.6e8538a7.chunk.js",
+    "static/css/main.f50c0349.chunk.css",
+    "static/js/main.9be24df1.chunk.js"
   ]
 }
