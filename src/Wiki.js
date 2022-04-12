@@ -22,23 +22,34 @@ export class Wiki extends Component {
     }
   }
 
-  async getWikiData(c) {
-    const city = c.replace(/ \(.*/g, '').replace(/\?/g, '');
 
-    let url = `https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=${city}&limit=10`;
+  async getWikiData(c) {
+
+    const myHeaders = new Headers();
+
+    myHeaders.append('Api-User-Agent', 'Example/1.0');
+    myHeaders.append("Origin", "http://localhost:3000/Art-API-React");
+    let city = c.replace(/ \(.*/g, '').replace(/\?/g, '');
+    city = city.split(",")[0];
+    console.log(`city: ${city}`)
+
+    /**
+     * RETHINK FUNCTIONALITY
+     * TEST JPF
+     */
+
+    let url = `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gspage=${city}&gsradius=10000&gslimit=10`;
     let response = await fetch(url,
       {
-        headers: {
-          'Authorization': `Bearer ${WIKI_TOKEN}`,
-          'Api-User-Agent': WIKI_USER
-        }
+        method: 'GET',
+        headers: myHeaders,
       }
     );
     response.json()
       .then((responseData) => {
-        this.geonames = responseData.pages;
-        console.log()
-        console.dir(responseData)
+        this.geonames = responseData.query.geosearch;
+        console.log('this.geonames')
+        console.dir(this.geonames)
         this.setState({
           page: 0
         })
@@ -72,7 +83,7 @@ export class Wiki extends Component {
             </div>
           </div>
           <div className="map">
-            <Map lat={this.geonames[this.state.page].lat} lng={this.geonames[this.state.page].lng} />
+            <Map lat={this.geonames[this.state.page].lat} lng={this.geonames[this.state.page].lon} />
           </div>
         </div>
       )
