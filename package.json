@@ -14,7 +14,7 @@
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
     "react-tag-input": "^6.4.0",
-    "sass": "^1.50.0"
+    "sass": "^1.56.1"
   },
   "scripts": {
     "predeploy": "npm run build",
