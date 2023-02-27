@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './App.scss';
-import { Map } from './Map.js';
-import { paginate } from './Helpers.js';
+//import './App.scss';
+import { Map } from './Map';
+import { paginate } from '../utils/helpers';
 
 const WIKI_TOKEN = `${process.env.REACT_APP_WIKI_TOKEN}`;
 const WIKI_USER = `${process.env.REACT_APP_WIKI_ACCT}`;
@@ -83,7 +83,7 @@ export class Wiki extends Component {
             </div>
           </div>
           <div className="map">
-            <Map lat={this.geonames[this.state.page].lat} lng={this.geonames[this.state.page].lon} />
+           { /**  <Map lat={this.geonames[this.state.page].lat} lng={this.geonames[this.state.page].lon} /> */ }
           </div>
         </div>
       )

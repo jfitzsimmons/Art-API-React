@@ -1,26 +1,32 @@
 {
-  "name": "europeana",
+  "name": "art_react_spa",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/jest": "^29.4.0",
+    "@types/node": "^18.14.2",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
     "eslint-utils": "^3.0.0",
     "gh-pages": "^3.2.3",
     "google-map-react": "^2.1.10",
     "lodash": "^4.17.15",
     "lodash.template": "^4.5.0",
+    "process": "^0.11.10",
     "react": "^17.0.2",
     "react-dnd": "^14.0.4",
     "react-dnd-html5-backend": "^14.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "5.0.0",
+    "react-scripts": "^5.0.1",
     "react-tag-input": "^6.4.0",
-    "sass": "^1.56.1"
+    "sass": "^1.56.1",
+    "typescript": "^4.9.5"
   },
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "webpack serve --mode development --env development --open",
+    "build": "webpack --mode production --env production",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -34,8 +40,21 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@babel/core": "^7.21.0",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "babel-loader": "^9.1.2",
+    "css-loader": "^5.1.3",
+    "dotenv-webpack": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0"
+    "eslint-plugin-prettier": "^4.0.0",
+    "file-loader": "^6.2.0",
+    "html-loader": "^4.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
   },
   "homepage": "https://jfitzsimmons.github.io/Art-API-React"
 }

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './App.scss';
+//import './App.scss';
 import { WithContext as ReactTags } from 'react-tag-input';
 
 const KeyCodes = {

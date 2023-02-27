@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import GoogleMapReact from 'google-map-react';
 import {MapMarker} from './MapMarker.js';
-import './App.scss';
+//import './App.scss';
 
 const MAP_API_KEY = `${process.env.REACT_APP_MAP_API_KEY}`;
 
