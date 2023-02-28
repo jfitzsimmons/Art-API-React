@@ -1,94 +1,106 @@
-import React, { Component } from 'react';
-//import './App.scss';
-import { Map } from './Map';
-import { paginate } from '../utils/helpers';
+import React, { useCallback, useState, useEffect } from 'react'
+import * as ReactDOM from 'react-dom'
+import { Map } from './Map'
 
-const WIKI_TOKEN = `${process.env.REACT_APP_WIKI_TOKEN}`;
-const WIKI_USER = `${process.env.REACT_APP_WIKI_ACCT}`;
+export default function Wiki(props) {
+  const { city } = props
+  const [page, setPage] = useState(0)
+  const [cities, setCities] = useState({})
+  const [wikiResults, setWikiResults] = useState({})
+  const [returnError, setReturnError] = useState(false)
 
-export class Wiki extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      page: -1
-    }
-    this.geonames = {}
-    this.paginate = paginate.bind(this);
-  }
+  const getCityGeocode = useCallback(async () => {
+    console.log('getCityGeocode city', city)
 
-  componentDidUpdate(prevProps) {
-    if (this.props.city !== prevProps.city) {
-      this.getWikiData(this.props.city);
-    }
-  }
-
-
-  async getWikiData(c) {
-
-    const myHeaders = new Headers();
-
-    myHeaders.append('Api-User-Agent', 'Example/1.0');
-    myHeaders.append("Origin", "http://localhost:3000/Art-API-React");
-    let city = c.replace(/ \(.*/g, '').replace(/\?/g, '');
-    city = city.split(",")[0];
-    console.log(`city: ${city}`)
-
-    /**
-     * RETHINK FUNCTIONALITY
-     * TEST JPF
-     */
-
-    let url = `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gspage=${city}&gsradius=10000&gslimit=10`;
-    let response = await fetch(url,
-      {
-        method: 'GET',
-        headers: myHeaders,
-      }
-    );
-    response.json()
+    fetch(`https://geocode.maps.co/search?q=${city}`, {
+      method: 'GET',
+    })
+      .then((response) => response.json())
       .then((responseData) => {
-        this.geonames = responseData.query.geosearch;
-        console.log('this.geonames')
-        console.dir(this.geonames)
-        this.setState({
-          page: 0
-        })
-      }).catch(console.error);
+        setCities(responseData)
+      })
+      .catch((error) => {
+        setReturnError(true)
+        console.log(error)
+      })
+  }, [city])
 
+  const getWikiData = useCallback(async () => {
+    try {
+      const res = await fetch(
+        `https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=extracts&exchars=530&exintro=true&generator=geosearch&ggsradius=10000&ggscoord=${cities[0].lat}|${cities[0].lon}&formatversion=2&format=json`
+      )
+      const data = await res.json()
 
+      console.log('NESTED')
+      console.dir(data)
+      setWikiResults(data.query.pages)
+    } catch (error) {
+      console.log(`Something went wrong: ${error}`)
+      return null
+    }
+  }, [cities])
 
-  }
+  useEffect(() => {
+    if (cities) {
+      getWikiData()
+    }
+  }, [getWikiData, cities])
 
-  componentDidMount() {
-    this.getWikiData(this.props.city);
-  }
+  useEffect(() => {
+    city && city !== '' && getCityGeocode()
+  }, [city, getCityGeocode])
 
-  render() {
-    if (this.geonames && this.geonames[this.state.page]) {
-      console.dir(this.geonames);
-      return (
+  return (
+    <div>
+      {wikiResults && wikiResults[page] ? (
         <div className="map-wiki flx-ctr wrap">
           <div className="wiki">
             <div className="wiki__results">
-              <span className="label__title row">Wikipedia results for {this.props.city}:</span>
-              <span className="label__title row">{this.geonames[this.state.page].title}</span>
-              {this.geonames[this.state.page].description}
+              <span className="label__title row">
+                Wikipedia results for {city}:
+              </span>
+              <span className="label__title row">
+                {wikiResults[page].title}
+              </span>
+              <div
+                dangerouslySetInnerHTML={{ __html: wikiResults[page].extract }}
+              />
+
               <br />
-              <a className="wiki__link row" href={`https://${this.geonames[this.state.page].wikipediaUrl}`}>{this.geonames[this.state.page].title} on wikipedia</a>
+              <a
+                className="wiki__link row"
+                href={`https://en.wikipedia.org/?curid=${wikiResults[page].pageid}`}
+              >
+                {wikiResults[page].title} on wikipedia
+              </a>
             </div>
             <div className="page">
-              {this.state.page + 1} of {this.geonames.length}
+              {page + 1} of {wikiResults.length}
               <br />
-              <button className="prev" onClick={() => this.paginate(-1)} disabled={this.state.page === 0}>previous</button> | <button className="next" onClick={() => this.paginate(1)} disabled={this.state.page === this.geonames.length - 1}>next</button>
+              <button
+                className="prev"
+                onClick={() => setPage(page - 1)}
+                disabled={page === 0}
+              >
+                previous
+              </button>{' '}
+              |{' '}
+              <button
+                className="next"
+                onClick={() => setPage(page + 1)}
+                disabled={page === wikiResults.length - 1}
+              >
+                next
+              </button>
             </div>
           </div>
           <div className="map">
-           { /**  <Map lat={this.geonames[this.state.page].lat} lng={this.geonames[this.state.page].lon} /> */ }
+            Wrong "america"??? next / prev | change wikiresults{' '}
+            <p>Locations found for {city}:</p>
           </div>
         </div>
-      )
-    } else {
-      return (
+      ) : (
         <div className="map-wiki flx-ctr wrap">
           <div className="wiki">
             <div>
@@ -98,7 +110,7 @@ export class Wiki extends Component {
             </div>
           </div>
         </div>
-      );
-    };
-  }
-};
+      )}
+    </div>
+  )
+}
