@@ -22,7 +22,7 @@ const countryLookup = {
 export default function Painting(props) {
   const { records } = props
   const [page, setPage] = useState(0)
-  const [returnError, setReturnError] = useState(false)
+  //const [returnError, setReturnError] = useState(false)
   const [city, setCity] = useState('')
 
   const setStyle = useCallback(async () => {

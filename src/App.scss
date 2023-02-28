@@ -1,8 +1,8 @@
-$red:     #fb4264;
-$pink:      #ffdfff;
-$white-half: rgba(255,255,255,0.5);
-$white-full: rgba(255,255,255,0.9);
-$darkgray:  #1f1f1f;
+$red: #fb4264;
+$pink: #ffdfff;
+$white-half: rgba(255, 255, 255, 0.5);
+$white-full: rgba(255, 255, 255, 0.9);
+$darkgray: #1f1f1f;
 $lightgray: #cfcfcf;
 $gray: #888;
 $btm-margin: 0 0 20px;
@@ -21,7 +21,9 @@ body {
 a:active,
 a:hover,
 a:link,
-a:visited {color: $red}
+a:visited {
+  color: $red;
+}
 
 li {
   list-style-type: none;
@@ -32,7 +34,7 @@ li {
   font-size: 36px;
   letter-spacing: -1px;
   text-shadow: 1px 2px 3px $darkgray;
-  color:$white-full;
+  color: $white-full;
   margin: $btm-margin;
   width: 100%;
   text-align: center;
@@ -198,7 +200,7 @@ input:focus ~ .left {
 }
 
 .ReactTags__tagInput {
-    margin: 0 5px;
+  margin: 0 5px;
 }
 
 div.ReactTags__selected span.ReactTags__tag {
@@ -224,7 +226,7 @@ div.ReactTags__suggestions {
 
 div.ReactTags__suggestions ul {
   list-style-type: none;
-  box-shadow: 0.05em 0.01em 0.5em rgba(0,0,0,0.2);
+  box-shadow: 0.05em 0.01em 0.5em rgba(0, 0, 0, 0.2);
   background: $white-full;
   margin: 0;
   padding: 0;
@@ -263,8 +265,6 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   }
 }
 
-
-
 @keyframes rotate {
   100% {
     transform: rotate(360deg);
@@ -290,7 +290,7 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 }
 
 .painting {
-  color: #FFF;
+  color: #fff;
   background: rgba(0, 0, 0, 0.6);
 }
 
@@ -300,7 +300,7 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 }
 
 .frame__cell {
-  flex: 1
+  flex: 1;
 }
 
 .frame__cell.left {
@@ -322,7 +322,7 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 }
 
 .painting__paging {
-  margin: $btm-margin
+  margin: $btm-margin;
 }
 
 .painting__label {

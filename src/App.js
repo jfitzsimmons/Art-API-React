@@ -5,10 +5,10 @@ import Painting from './components/Painting'
 
 const ART_API_KEY = `${process.env.REACT_APP_ART_API_KEY}`
 
-export default function App(props) {
+export default function App() {
   const [title, setTitle] = useState('earth, moon, sun, stars, world')
   const [records, setRecords] = useState({})
-  const [returnError, setReturnError] = useState(false)
+  // const [returnError, setReturnError] = useState(false)
 
   const updateTitle = (subject) => {
     setTitle(subject)
@@ -43,7 +43,7 @@ export default function App(props) {
         setRecords(responseData.records)
       })
       .catch((error) => {
-        setReturnError(true)
+        // setReturnError(true)
         console.log(error)
       })
   }, [title])

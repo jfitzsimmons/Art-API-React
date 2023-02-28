@@ -1,13 +1,13 @@
 import React, { useCallback, useState, useEffect } from 'react'
-import * as ReactDOM from 'react-dom'
-import { Map } from './Map'
+//import * as ReactDOM from 'react-dom'
+import Map from './Map'
 
 export default function Wiki(props) {
   const { city } = props
   const [page, setPage] = useState(0)
   const [cities, setCities] = useState({})
   const [wikiResults, setWikiResults] = useState({})
-  const [returnError, setReturnError] = useState(false)
+  //const [returnError, setReturnError] = useState(false)
 
   const getCityGeocode = useCallback(async () => {
     console.log('getCityGeocode city', city)
@@ -17,16 +17,17 @@ export default function Wiki(props) {
     })
       .then((response) => response.json())
       .then((responseData) => {
+        console.log('cities')
+        console.dir(responseData)
         setCities(responseData)
       })
       .catch((error) => {
-        setReturnError(true)
+        // setReturnError(true)
         console.log(error)
       })
   }, [city])
 
   const getWikiData = useCallback(async () => {
-    let data = null
     try {
       const res = await fetch(
         `https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=extracts&exchars=530&exintro=true&generator=geosearch&ggsradius=10000&ggscoord=${cities[0].lat}|${cities[0].lon}&formatversion=2&format=json`
@@ -103,6 +104,7 @@ export default function Wiki(props) {
           <div className="map">
             Wrong "america"??? next / prev | change wikiresults{' '}
             <p>Locations found for {city}:</p>
+            {cities[0] && <Map cities={cities} />}
           </div>
         </div>
       ) : (

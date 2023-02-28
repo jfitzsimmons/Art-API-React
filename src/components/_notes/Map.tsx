@@ -1,17 +1,18 @@
 import React, { memo, createRef, useEffect } from 'react'
 //import GoogleMapReact from 'google-map-react'
+//import { MapMarker } from './MapMarker'
 import L, { LatLngExpression } from 'leaflet'
 import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet'
 //import './App.scss';
 
 //const MAP_API_KEY = `${process.env.REACT_APP_MAP_API_KEY}`
-const markerRefs = []
+const markerRefs: React.RefObject<L.Marker>[] = []
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function Map(props) {
+export default function Map(props: { cities: any }) {
   // const [zoom, setZoom] = useState(10)
   const { cities } = props
-  const defaultPosition = [38.65727, -90.29789]
+  const defaultPosition: LatLngExpression = [38.65727, -90.29789]
   /** 
   constructor(props) {
     super(props);
@@ -34,7 +35,7 @@ export default function Map(props) {
       })
     }
   }
-
+  */
   interface Place {
     place_id: number
     lat: number
@@ -45,30 +46,31 @@ export default function Map(props) {
     mph?: number
     timing?: number
   }
-  */
+
   const renderItems = () => {
     return (
       cities &&
-      cities.map((place) => <Post key={place.place_id} place={place} />)
+      cities.map((place: Place) => <Post key={place.place_id} place={place} />)
     )
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Post = memo(({ place }) => {
-    const newRef = createRef()
+  const Post = memo(({ place }: any) => {
+    const newRef = createRef<L.Marker>()
     markerRefs.push(newRef)
     return (
       <Marker
         key={place.id}
-        position={[place.lat, place.lon]}
+        position={[place.latitude, place.longitude]}
         //eventHandlers={{ click: () => showPreview(place) }}
         icon={L.divIcon({
           iconSize: [40, 40],
           iconAnchor: [20, 20],
           popupAnchor: [0, 0],
           shadowSize: [0, 0],
+          className: `map-icon map-icon_${place.place_id}`,
         })}
-        ref={newRef}
+        ref={newRef as React.RefObject<L.Marker>}
       >
         <Tooltip>{place.label}</Tooltip>
       </Marker>
@@ -83,10 +85,10 @@ export default function Map(props) {
   return (
     <div className="map__container">
       <MapContainer
-        center={[cities[0].lat, cities[0].lon]}
+        center={defaultPosition}
         zoom={11}
         scrollWheelZoom={true}
-        style={{ height: '50%', width: '100%' }}
+        style={{ height: '100vh' }}
         zoomControl={false}
       >
         <TileLayer
@@ -94,7 +96,7 @@ export default function Map(props) {
           url="https://api.mapbox.com/styles/v1/jfitzsimmons/ckvntg80w0gn014qc1s75efwr/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiamZpdHpzaW1tb25zIiwiYSI6ImNrdm50am1vcDNnMGEybnFmZHpzYzJodWEifQ.Y-mgO21RLeOtil5V_Fu7dA"
         />
 
-        {cities && cities.length > 0 && renderItems()}
+        {/**cities && cities.length > 0 && renderItems()**/}
       </MapContainer>
     </div>
   )
