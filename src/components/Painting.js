@@ -6,10 +6,12 @@ const countryLookup = {
   French: 'france',
   American: 'america',
   Indian: 'india',
+  India: 'india',
   Chinese: 'china',
   Japanese: 'japan',
   Dutch: 'netherlands',
   German: 'germany',
+  Korean: 'korea',
 }
 
 //testjpf painting ID is used to get object that has places
@@ -34,6 +36,10 @@ export default function Painting(props) {
   }, [page, records])
 
   const findCity = useCallback(() => {
+    console.log('findcity - records[page].period', records[page].period)
+    //if (records[page].period)
+    // console.log(records[page].period.split(' ').shift())
+
     let birthplace =
       records[page].people && records[page].people.length > 0
         ? records[page].people[0].birthplace
@@ -41,18 +47,20 @@ export default function Painting(props) {
     if (birthplace) {
       birthplace =
         birthplace.length > 23 ? birthplace.split(' ').pop() : birthplace
-    } else if (records[page].culture) {
-      birthplace = countryLookup[records[page].culture]
-    } else if (records[page].period) {
-      birthplace =
-        records[page].period.length > 23
-          ? records[page].period.split(' ').shift()
-          : records[page].period
     } else {
-      birthplace =
-        records[page].division.length > 23
-          ? records[page].division.split(' ').shift()
-          : records[page].division
+      if (records[page].culture) {
+        console.log('CULTURE', records[page].culture)
+        birthplace = countryLookup[records[page].culture]
+      } else if (records[page].period) {
+        console.log('TRUE', records[page].period)
+        birthplace = records[page].period.split(' ').shift()
+      } else {
+        console.log('ELSE')
+        birthplace =
+          records[page].division.length > 23
+            ? records[page].division.split(' ').shift()
+            : records[page].division
+      }
     }
     console.log('setCity birthplace', birthplace)
     setCity(birthplace)

@@ -26,6 +26,7 @@ export default function Wiki(props) {
   }, [city])
 
   const getWikiData = useCallback(async () => {
+    let data = null
     try {
       const res = await fetch(
         `https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=extracts&exchars=530&exintro=true&generator=geosearch&ggsradius=10000&ggscoord=${cities[0].lat}|${cities[0].lon}&formatversion=2&format=json`
@@ -34,7 +35,11 @@ export default function Wiki(props) {
 
       console.log('NESTED')
       console.dir(data)
-      setWikiResults(data.query.pages)
+      //testjpf should move onto the next city coordinate if no query results
+      //${cities[1].lat}|${cities[1].lon}
+      ;(await data.query)
+        ? setWikiResults(data.query.pages)
+        : setWikiResults({})
     } catch (error) {
       console.log(`Something went wrong: ${error}`)
       return null

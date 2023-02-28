@@ -6,7 +6,7 @@ import Painting from './components/Painting'
 const ART_API_KEY = `${process.env.REACT_APP_ART_API_KEY}`
 
 export default function App(props) {
-  const [title, setTitle] = useState('sprint, winter, summer, fall')
+  const [title, setTitle] = useState('earth, moon, sun, stars, world')
   const [records, setRecords] = useState({})
   const [returnError, setReturnError] = useState(false)
 
@@ -31,7 +31,7 @@ export default function App(props) {
         title: title,
         classification: 'Paintings',
         hasimage: 1,
-        q: 'imagepermissionlevel:0 AND (verificationlevel:4)',
+        q: 'imagepermissionlevel:0 AND (verificationlevel:3 OR verificationlevel:4)',
         sort: 'random',
       })
     }
