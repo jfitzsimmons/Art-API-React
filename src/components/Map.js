@@ -1,7 +1,7 @@
 import React, { memo, createRef, useEffect } from 'react'
 //import GoogleMapReact from 'google-map-react'
 import L, { LatLngExpression } from 'leaflet'
-import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Tooltip, useMap } from 'react-leaflet'
 //import './App.scss';
 
 //const MAP_API_KEY = `${process.env.REACT_APP_MAP_API_KEY}`
@@ -10,7 +10,7 @@ const markerRefs = []
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Map(props) {
   // const [zoom, setZoom] = useState(10)
-  const { cities } = props
+  const { coords, cityGeoI } = props
   const defaultPosition = [38.65727, -90.29789]
   /** 
   constructor(props) {
@@ -48,8 +48,8 @@ export default function Map(props) {
   */
   const renderItems = () => {
     return (
-      cities &&
-      cities.map((place) => <Post key={place.place_id} place={place} />)
+      coords &&
+      coords.map((place) => <Post key={place.place_id} place={place} />)
     )
   }
 
@@ -67,34 +67,55 @@ export default function Map(props) {
           iconAnchor: [20, 20],
           popupAnchor: [0, 0],
           shadowSize: [0, 0],
+          className: `map-icon`,
         })}
         ref={newRef}
       >
-        <Tooltip>{place.label}</Tooltip>
+        <Tooltip>{place.displa_name}</Tooltip>
       </Marker>
     )
   })
 
+  const RecenterAutomatically = ({ lat, lon }) => {
+    const map = useMap()
+    useEffect(() => {
+      map.setView([lat, lon])
+    }, [lat, lon])
+    return null
+  }
+
   useEffect(() => {
-    //function HelloWorld() { return "Hello, World!"; }
-    // ReactDOM.render(React.createElement(HelloWorld), document.getElementById("root"));
-  }, [])
+    if (cityGeoI) {
+      console.log('MAP :::   cityGeoI', cityGeoI.lat)
+
+      //  setPage(0)
+    }
+  }, [cityGeoI])
 
   return (
     <div className="map__container">
       <MapContainer
-        center={[cities[0].lat, cities[0].lon]}
+        center={[coords[0].lat, coords[0].lon]}
         zoom={11}
-        scrollWheelZoom={true}
-        style={{ height: '50%', width: '100%' }}
-        zoomControl={false}
+        scrollWheelZoom={false}
+        style={{ height: '512px', width: '100%' }}
       >
         <TileLayer
           attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
-          url="https://api.mapbox.com/styles/v1/jfitzsimmons/ckvntg80w0gn014qc1s75efwr/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiamZpdHpzaW1tb25zIiwiYSI6ImNrdm50am1vcDNnMGEybnFmZHpzYzJodWEifQ.Y-mgO21RLeOtil5V_Fu7dA"
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {cities && cities.length > 0 && renderItems()}
+        {coords && coords.length > 0 && renderItems()}
+
+        {
+          //testjpf works but needs markers
+          //copy renderItems() above and do the same for all citygeos
+          //this meeans I need all of wikiresults, (or at least filter out the coordinates for the markers) !!!
+
+          cityGeoI.lat && (
+            <RecenterAutomatically lat={cityGeoI.lat} lon={cityGeoI.lon} />
+          )
+        }
       </MapContainer>
     </div>
   )

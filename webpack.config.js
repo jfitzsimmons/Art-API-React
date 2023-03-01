@@ -15,10 +15,6 @@ module.exports = (env, argv) => ({
     new Dotenv({ path: `./.env.${argv.mode}` }),
     new HtmlWebpackPlugin({ template: './public/index.html' }),
     new MiniCssExtractPlugin(),
-    new ESLintPlugin({
-      extensions: ['.tsx', '.ts', '.js'],
-      exclude: 'node_modules',
-    }),
   ],
   resolve: {
     extensions: ['.ts', '.js', '.tsx', '...'],
@@ -36,13 +32,6 @@ module.exports = (env, argv) => ({
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-        },
-      },
-      {
-        test: /\.tsx?$/,
-        exclude: [/node_modules/, /_notes/],
-        use: {
-          loader: 'ts-loader',
         },
       },
       {

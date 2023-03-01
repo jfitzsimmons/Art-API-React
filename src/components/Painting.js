@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Wiki from './Wiki'
+import Map from './Map'
+import { shuffle } from '../utils/helpers'
 
 const countryLookup = {
   Italian: 'italy',
@@ -12,6 +14,7 @@ const countryLookup = {
   Dutch: 'netherlands',
   German: 'germany',
   Korean: 'korea',
+  Persian: 'persia',
 }
 
 //testjpf painting ID is used to get object that has places
@@ -20,96 +23,130 @@ const countryLookup = {
 //make it so if you click on marker it takes you to that "page" in pagination for wiki result
 
 export default function Painting(props) {
-  const { records } = props
+  const { paintings } = props
   const [page, setPage] = useState(0)
-  //const [returnError, setReturnError] = useState(false)
-  const [city, setCity] = useState('')
+  const [returnError, setReturnError] = useState(false)
+  const [cityName, setCityName] = useState('')
+  const [cityGeoI, setCityGeoI] = useState([])
+  const [cityCoords, setCityCoords] = useState({})
+  const [wikiCoords, setWikiCoords] = useState({})
+
+  const getGeosNearPlaceName = useCallback(async () => {
+    console.log('getGeosNearPlaceName cityName', cityName)
+
+    fetch(`https://geocode.maps.co/search?q=${cityName}`, {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log('cityCoords')
+        console.dir(responseData)
+        //trstjpf randomy sort cityCoords!!!
+        setCityCoords(responseData)
+      })
+      .catch((error) => {
+        setReturnError(true)
+        console.log(error)
+      })
+  }, [cityName])
 
   const setStyle = useCallback(async () => {
-    const colors = records[page].colors
+    const colors = paintings[page].colors
     let gradient = ''
     for (let i = colors.length; i--; ) {
       gradient += colors[i].color
       gradient += i === 0 ? ')' : ', '
     }
     document.body.style.background = `radial-gradient(circle at bottom right, ${gradient}`
-  }, [page, records])
+  }, [page, paintings])
 
-  const findCity = useCallback(() => {
-    console.log('findcity - records[page].period', records[page].period)
-    //if (records[page].period)
-    // console.log(records[page].period.split(' ').shift())
+  const placeNameForReverseGeo = useCallback(() => {
+    // console.log('findcityName - paintings[page].period', paintings[page].period)
+    //if (paintings[page].period)
+    // console.log(paintings[page].period.split(' ').shift())
 
     let birthplace =
-      records[page].people && records[page].people.length > 0
-        ? records[page].people[0].birthplace
+      paintings[page].people && paintings[page].people.length > 0
+        ? paintings[page].people[0].birthplace
         : null
     if (birthplace) {
       birthplace =
         birthplace.length > 23 ? birthplace.split(' ').pop() : birthplace
     } else {
-      if (records[page].culture) {
-        console.log('CULTURE', records[page].culture)
-        birthplace = countryLookup[records[page].culture]
-      } else if (records[page].period) {
-        console.log('TRUE', records[page].period)
-        birthplace = records[page].period.split(' ').shift()
+      if (paintings[page].culture) {
+        console.log('CULTURE', paintings[page].culture)
+        birthplace = countryLookup[paintings[page].culture]
+      } else if (paintings[page].period) {
+        console.log('TRUE', paintings[page].period)
+        birthplace = paintings[page].period.split(' ').shift()
       } else {
         console.log('ELSE')
         birthplace =
-          records[page].division.length > 23
-            ? records[page].division.split(' ').shift()
-            : records[page].division
+          paintings[page].division.length > 23
+            ? paintings[page].division.split(' ').shift()
+            : paintings[page].division
       }
     }
-    console.log('setCity birthplace', birthplace)
-    setCity(birthplace)
-  }, [page, records])
+    //console.log('setCityName birthplace', birthplace)
+    setCityName(birthplace)
+  }, [page, paintings])
 
   useEffect(() => {
+    console.log('useEffect ::: page', page)
+
     setStyle()
-    findCity()
-  }, [findCity, page, setStyle])
+    placeNameForReverseGeo()
+  }, [placeNameForReverseGeo, page, setStyle])
+
+  useEffect(() => {
+    console.log('useEffect ::: cityName', cityName)
+
+    cityName && cityName !== '' && getGeosNearPlaceName()
+  }, [cityName, getGeosNearPlaceName])
+
+  useEffect(() => {
+    console.log('useEffect ::: cityGeoI', cityGeoI)
+  }, [cityGeoI])
 
   return (
     <div>
-      {records && records.length > 0 ? (
+      {paintings && paintings.length > 0 ? (
         <div>
           <div className="render-coontainer">
             <div className="painting flx-ctr">
               <div className="painting__frame flx-ctr">
-                <span className="heading">{records[page].title}</span>
+                <span className="heading">{paintings[page].title}</span>
                 <div className="frame__cell left">
                   <img
                     className="painting__image"
-                    src={records[page].primaryimageurl}
-                    alt={'image of ' + records[page].title}
+                    src={paintings[page].primaryimageurl}
+                    alt={'image of ' + paintings[page].title}
                   />
                 </div>
                 <div className="frame__cell right">
                   <div className="painting__label">
                     <span className="label__title row">
-                      {records[page].title}
+                      {paintings[page].title}
                     </span>
-                    {records[page].people &&
-                      records[page].people.length > 0 && (
+                    {paintings[page].people &&
+                      paintings[page].people.length > 0 && (
                         <span className="label__artist row">
-                          {records[page].people[0].name}
+                          {paintings[page].people[0].name}
                         </span>
                       )}
-                    <span className="label__region row">{city}</span>
+                    <span className="label__region row">{cityName}</span>
                     <span className="label__dated row">
-                      {records[page].dated}
+                      {paintings[page].dated}
                     </span>
                     <span className="label__period row">
-                      {records[page].period}
+                      {paintings[page].period}
                     </span>
                     <span className="label__medium row">
-                      {records[page].medium}
+                      {paintings[page].medium}
                     </span>
                   </div>
                   <div className="painting__paging page">
-                    {page + 1} of {records.length}
+                    {page + 1} of {paintings.length}
                     <br />
                     <button
                       className="prev"
@@ -122,7 +159,7 @@ export default function Painting(props) {
                     <button
                       className="next"
                       onClick={() => setPage(page + 1)}
-                      disabled={page === records.length - 1}
+                      disabled={page === paintings.length - 1}
                     >
                       next
                     </button>
@@ -131,7 +168,25 @@ export default function Painting(props) {
               </div>
             </div>
           </div>
-          {<Wiki city={city} />}
+          <div className="map-wiki flx-ctr wrap">
+            <Wiki
+              setcitygeoi={setCityGeoI}
+              cityName={cityName}
+              coords={cityCoords}
+            />
+            <div className="map">
+              {/** 
+            Wrong "america"??? next / prev | change wikiresults{' '}
+            <p>Locations found for {cityName}:</p>*/}
+              {cityCoords[0] && (
+                <Map
+                  setwikicoords={setCityCoords}
+                  cityGeoI={cityGeoI}
+                  coords={cityCoords}
+                />
+              )}
+            </div>
+          </div>
         </div>
       ) : (
         <div>
