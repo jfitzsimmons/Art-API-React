@@ -1,6 +1,5 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
 
@@ -14,7 +13,6 @@ module.exports = (env, argv) => ({
   plugins: [
     new Dotenv({ path: `./.env.${argv.mode}` }),
     new HtmlWebpackPlugin({ template: './public/index.html' }),
-    new MiniCssExtractPlugin(),
   ],
   resolve: {
     extensions: ['.ts', '.js', '.tsx', '...'],
@@ -35,8 +33,12 @@ module.exports = (env, argv) => ({
         },
       },
       {
-        test: /\.css|scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'url-loader',
+      },
+      {
+        test: /\.(css|sass|scss)$/i,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],
   },

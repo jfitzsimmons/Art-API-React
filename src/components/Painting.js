@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Wiki from './Wiki'
 import Map from './Map'
-import { shuffle } from '../utils/helpers'
+//import { shuffle } from '../utils/helpers'
+import './Painting.scss'
 
 const countryLookup = {
   Italian: 'italy',
@@ -29,7 +30,8 @@ export default function Painting(props) {
   const [cityName, setCityName] = useState('')
   const [cityGeoI, setCityGeoI] = useState([])
   const [cityCoords, setCityCoords] = useState({})
-  const [wikiCoords, setWikiCoords] = useState({})
+  const [wikiCoords, setWikiCoords] = useState([])
+  const [coordsI, setCitiesI] = useState(0)
 
   const getGeosNearPlaceName = useCallback(async () => {
     console.log('getGeosNearPlaceName cityName', cityName)
@@ -107,72 +109,71 @@ export default function Painting(props) {
   useEffect(() => {
     console.log('useEffect ::: cityGeoI', cityGeoI)
   }, [cityGeoI])
-
+  //testjpf nedd to abstract this to a new painitng component??
   return (
-    <div>
+    <main class="main">
       {paintings && paintings.length > 0 ? (
-        <div>
-          <div className="render-coontainer">
-            <div className="painting flx-ctr">
-              <div className="painting__frame flx-ctr">
-                <span className="heading">{paintings[page].title}</span>
-                <div className="frame__cell left">
-                  <img
-                    className="painting__image"
-                    src={paintings[page].primaryimageurl}
-                    alt={'image of ' + paintings[page].title}
-                  />
-                </div>
-                <div className="frame__cell right">
-                  <div className="painting__label">
-                    <span className="label__title row">
-                      {paintings[page].title}
+        <>
+          <div className="painting__frame flx-ctr">
+            <span className="heading">{paintings[page].title}</span>
+            <div className="frame__cell left">
+              <img
+                className="painting__image"
+                src={paintings[page].primaryimageurl}
+                alt={'image of ' + paintings[page].title}
+              />
+            </div>
+            <div className="frame__cell right">
+              <div className="painting__label">
+                <span className="label__title row">
+                  {paintings[page].title}
+                </span>
+                {paintings[page].people &&
+                  paintings[page].people.length > 0 && (
+                    <span className="label__artist row">
+                      {paintings[page].people[0].name}
                     </span>
-                    {paintings[page].people &&
-                      paintings[page].people.length > 0 && (
-                        <span className="label__artist row">
-                          {paintings[page].people[0].name}
-                        </span>
-                      )}
-                    <span className="label__region row">{cityName}</span>
-                    <span className="label__dated row">
-                      {paintings[page].dated}
-                    </span>
-                    <span className="label__period row">
-                      {paintings[page].period}
-                    </span>
-                    <span className="label__medium row">
-                      {paintings[page].medium}
-                    </span>
-                  </div>
-                  <div className="painting__paging page">
-                    {page + 1} of {paintings.length}
-                    <br />
-                    <button
-                      className="prev"
-                      onClick={() => setPage(page - 1)}
-                      disabled={page === 0}
-                    >
-                      previous
-                    </button>{' '}
-                    |{' '}
-                    <button
-                      className="next"
-                      onClick={() => setPage(page + 1)}
-                      disabled={page === paintings.length - 1}
-                    >
-                      next
-                    </button>
-                  </div>
-                </div>
+                  )}
+                <span className="label__region row">{cityName}</span>
+                <span className="label__dated row">
+                  {paintings[page].dated}
+                </span>
+                <span className="label__period row">
+                  {paintings[page].period}
+                </span>
+                <span className="label__medium row">
+                  {paintings[page].medium}
+                </span>
+              </div>
+
+              <div className="painting__paging page">
+                {page + 1} of {paintings.length}
+                <br />
+                <button
+                  className="prev"
+                  onClick={() => setPage(page - 1)}
+                  disabled={page === 0}
+                >
+                  previous
+                </button>{' '}
+                |{' '}
+                <button
+                  className="next"
+                  onClick={() => setPage(page + 1)}
+                  disabled={page === paintings.length - 1}
+                >
+                  next
+                </button>
               </div>
             </div>
           </div>
           <div className="map-wiki flx-ctr wrap">
             <Wiki
+              setwikicoords={setWikiCoords}
               setcitygeoi={setCityGeoI}
               cityName={cityName}
               coords={cityCoords}
+              coordsI={coordsI}
             />
             <div className="map">
               {/** 
@@ -180,14 +181,16 @@ export default function Painting(props) {
             <p>Locations found for {cityName}:</p>*/}
               {cityCoords[0] && (
                 <Map
-                  setwikicoords={setCityCoords}
+                  wikicoords={wikiCoords}
                   cityGeoI={cityGeoI}
                   coords={cityCoords}
+                  setPaintingCoords={setCitiesI}
+                  paintingPage={page}
                 />
               )}
             </div>
           </div>
-        </div>
+        </>
       ) : (
         <div>
           <div className="render-coontainer">
@@ -207,6 +210,6 @@ export default function Painting(props) {
           </div>
         </div>
       )}
-    </div>
+    </main>
   )
 }

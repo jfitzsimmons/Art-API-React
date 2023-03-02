@@ -1,4 +1,4 @@
-import React, { memo, createRef, useEffect } from 'react'
+import React, { memo, createRef, useEffect, useState } from 'react'
 //import GoogleMapReact from 'google-map-react'
 import L, { LatLngExpression } from 'leaflet'
 import { MapContainer, TileLayer, Marker, Tooltip, useMap } from 'react-leaflet'
@@ -9,8 +9,12 @@ const markerRefs = []
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Map(props) {
+  const { coords, cityGeoI, wikicoords, setPaintingCoords, paintingPage } =
+    props
   // const [zoom, setZoom] = useState(10)
-  const { coords, cityGeoI } = props
+  const [page, setPage] = useState(0)
+  const [mapCenter, setMapCenter] = useState({})
+
   const defaultPosition = [38.65727, -90.29789]
   /** 
   constructor(props) {
@@ -46,20 +50,31 @@ export default function Map(props) {
     timing?: number
   }
   */
-  const renderItems = () => {
+  const renderItems = (coords, icon) => {
     return (
       coords &&
-      coords.map((place) => <Post key={place.place_id} place={place} />)
+      coords.map(
+        (place) => (
+          <Post
+            iconClass={`map_icon__${icon}`}
+            key={place.place_id}
+            place={place}
+          />
+        )
+
+        // wikicoords &&
+        //wikicoords.map((place) => <Post key={place.place_id} place={place} />
+      )
     )
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Post = memo(({ place }) => {
+  const Post = memo(({ place, iconClass }) => {
     const newRef = createRef()
     markerRefs.push(newRef)
     return (
       <Marker
-        key={place.id}
+        key={place.place_id}
         position={[place.lat, place.lon]}
         //eventHandlers={{ click: () => showPreview(place) }}
         icon={L.divIcon({
@@ -67,11 +82,11 @@ export default function Map(props) {
           iconAnchor: [20, 20],
           popupAnchor: [0, 0],
           shadowSize: [0, 0],
-          className: `map-icon`,
+          className: `map_icon ${iconClass}`,
         })}
         ref={newRef}
       >
-        <Tooltip>{place.displa_name}</Tooltip>
+        <Tooltip>{place.display_name}</Tooltip>
       </Marker>
     )
   })
@@ -80,43 +95,76 @@ export default function Map(props) {
     const map = useMap()
     useEffect(() => {
       map.setView([lat, lon])
-    }, [lat, lon])
+    }, [lat, lon, map])
     return null
   }
 
   useEffect(() => {
     if (cityGeoI) {
       console.log('MAP :::   cityGeoI', cityGeoI.lat)
-
-      //  setPage(0)
+      //testjpf  rename cityGeoI
+      setMapCenter(cityGeoI)
     }
   }, [cityGeoI])
+  useEffect(() => {
+    setPage(0)
+  }, [paintingPage])
+  useEffect(() => {
+    if (page > -1) {
+      console.log('MAP :::   cityGeoI', cityGeoI.lat)
+      //testjpf  rename cityGeoI
+      setPaintingCoords(page)
+    }
+  }, [cityGeoI.lat, page, setPaintingCoords])
 
   return (
     <div className="map__container">
       <MapContainer
         center={[coords[0].lat, coords[0].lon]}
-        zoom={11}
+        zoom={14}
         scrollWheelZoom={false}
-        style={{ height: '512px', width: '100%' }}
+        style={{ height: '100%', minHeight: '100%', width: '100%' }}
       >
         <TileLayer
-          attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
+          attribution=' Map data <br /> &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>,<br /> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>,<br />  Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {coords && coords.length > 0 && renderItems()}
+        {coords && coords.length > 0 && renderItems(coords, 'painting')}
+        {console.log('wikicoords return map')}
+        {wikicoords && wikicoords.length > 0 && renderItems(wikicoords, 'wiki')}
 
         {
           //testjpf works but needs markers
           //copy renderItems() above and do the same for all citygeos
           //this meeans I need all of wikiresults, (or at least filter out the coordinates for the markers) !!!
 
-          cityGeoI.lat && (
-            <RecenterAutomatically lat={cityGeoI.lat} lon={cityGeoI.lon} />
+          mapCenter.lat && (
+            <RecenterAutomatically lat={mapCenter.lat} lon={mapCenter.lon} />
           )
         }
       </MapContainer>
+      <div className="map__paging_wrap">
+        <div className="map__paging page">
+          {page + 1} of {coords.length}
+          <br />
+          <button
+            className="prev"
+            onClick={() => setPage(page - 1)}
+            disabled={page === 0}
+          >
+            previous
+          </button>{' '}
+          |{' '}
+          <button
+            className="next"
+            onClick={() => setPage(page + 1)}
+            disabled={page === coords.length - 1}
+          >
+            next
+          </button>
+        </div>
+      </div>
     </div>
   )
   /** 

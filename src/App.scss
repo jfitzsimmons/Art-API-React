@@ -1,11 +1,4 @@
-$red: #fb4264;
-$pink: #ffdfff;
-$white-half: rgba(255, 255, 255, 0.5);
-$white-full: rgba(255, 255, 255, 0.9);
-$darkgray: #1f1f1f;
-$lightgray: #cfcfcf;
-$gray: #888;
-$btm-margin: 0 0 20px;
+@use './assets/styles/vars';
 
 html {
   margin: 0;
@@ -15,14 +8,20 @@ html {
 body {
   font-family: 'Raleway', sans-serif;
   padding: 2%;
-  color: $darkgray;
+  color: vars.$darkgray;
 }
 
 a:active,
-a:hover,
 a:link,
 a:visited {
-  color: $red;
+  color: vars.$blue;
+  font-style: italic;
+}
+
+a:hover {
+  color: vars.$red;
+  text-decoration: underline;
+  font-style: normal;
 }
 
 li {
@@ -33,16 +32,16 @@ li {
   font-family: 'Playfair Display', serif;
   font-size: 36px;
   letter-spacing: -1px;
-  text-shadow: 1px 2px 3px $darkgray;
-  color: $white-full;
-  margin: $btm-margin;
+  text-shadow: 1px 2px 3px vars.$darkgray;
+  color: vars.$white-full;
+  margin: vars.$btm-margin;
   width: 100%;
   text-align: center;
 }
 
 .search-error {
-  background: $white-full;
-  color: $red;
+  background: vars.$white-full;
+  color: vars.$red;
   padding: 20px;
 }
 
@@ -63,12 +62,13 @@ button {
   padding: 0.5em 1em;
   outline: none;
   border: none;
-  background-color: $red;
+  background-color: vars.$red;
   border-radius: 4px;
 
   &:disabled {
-    background-color: $lightgray;
-    color: $gray;
+    background-color: vars.$lightgray;
+    color: vars.$gray;
+    cursor: not-allowed;
   }
 }
 
@@ -78,6 +78,7 @@ button:hover {
 
   &:disabled {
     animation: none;
+    cursor: not-allowed;
   }
 }
 @keyframes jelly {
@@ -106,7 +107,7 @@ button:hover {
 }
 
 .search {
-  margin: $btm-margin;
+  margin: vars.$btm-margin;
   text-align: center;
 }
 .ReactTags__tagInput {
@@ -116,10 +117,10 @@ button:hover {
 
 input {
   width: 6.5em;
-  color: $darkgray;
+  color: vars.$darkgray;
   font-size: inherit;
   font-family: inherit;
-  background-color: $white-full;
+  background-color: vars.$white-full;
   padding: 0.3em 0.45em;
   border: 2px solid transparent;
   transition: background-color 0.3s ease-in-out;
@@ -131,12 +132,12 @@ input:focus {
 }
 
 input::placeholder {
-  color: $gray;
+  color: vars.$gray;
 }
 
 span.line {
   position: absolute;
-  background-color: $red;
+  background-color: vars.$red;
   transition: transform 0.1s ease;
 }
 
@@ -204,8 +205,8 @@ input:focus ~ .left {
 }
 
 div.ReactTags__selected span.ReactTags__tag {
-  border: 2px solid $gray;
-  background: $white-full;
+  border: 2px solid vars.$gray;
+  background: vars.$white-full;
   font-size: 16px;
   display: inline-block;
   padding: 5px;
@@ -215,7 +216,7 @@ div.ReactTags__selected span.ReactTags__tag {
 }
 
 div.ReactTags__selected a.ReactTags__remove {
-  color: $gray;
+  color: vars.$gray;
   margin-left: 5px;
   cursor: pointer;
 }
@@ -227,13 +228,13 @@ div.ReactTags__suggestions {
 div.ReactTags__suggestions ul {
   list-style-type: none;
   box-shadow: 0.05em 0.01em 0.5em rgba(0, 0, 0, 0.2);
-  background: $white-full;
+  background: vars.$white-full;
   margin: 0;
   padding: 0;
 }
 
 div.ReactTags__suggestions li {
-  border-bottom: 1px solid $lightgray;
+  border-bottom: 1px solid vars.$lightgray;
   padding: 5px 10px;
   margin: 0;
 }
@@ -245,7 +246,7 @@ div.ReactTags__suggestions li mark {
 }
 
 div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
-  background: $red;
+  background: vars.$red;
   cursor: pointer;
 }
 
@@ -256,7 +257,7 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 
   circle {
     fill: none;
-    stroke: $red;
+    stroke: vars.$red;
     stroke-width: 2;
     stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;
@@ -289,127 +290,15 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   text-align: center;
 }
 
-.painting {
-  color: #fff;
-  background: rgba(0, 0, 0, 0.6);
-}
-
-.painting__frame {
-  flex-wrap: wrap;
-  padding: 2% 10px;
-}
-
-.frame__cell {
-  flex: 1;
-}
-
-.frame__cell.left {
-  min-width: 400px;
-  max-width: 800px;
-}
-
-.frame__cell.right {
-  align-self: center;
-  background: $darkgray;
-  max-width: 350px;
-  min-width: 250px;
-}
-
-.painting__image {
-  border: 6px solid $darkgray;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.painting__paging {
-  margin: $btm-margin;
-}
-
-.painting__label {
-  padding: 6px;
-  margin: 2% 0;
-}
-
-.row {
-  display: block;
-  text-align: left;
-  margin: 2% 0;
-}
-
-.label__title {
-  font-weight: bold;
-}
-
-.map-wiki {
-  background: rgba(255, 255, 255, 0.8);
-}
-
-.wiki {
-  flex: 1;
-  margin: 2%;
-  min-width: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.wiki__results {
-  text-align: left;
-}
-
-.wiki__link {
-  display: block;
-  text-align: right;
-}
-.map {
-  min-height: 512px;
-  flex: 2;
-}
-
-.map__container {
-  width: 100%;
-  height: 512px;
-  z-index: 0;
-}
-
-.map-icon {
-  width: 20px;
-  height: 20px;
-  background-color: rgba(242, 179, 4, 0.4);
-  border-radius: 50%;
-  box-shadow: 0px 0px 4px rgba(37, 51, 64, 0.6);
-  display: flex;
-  justify-content: center;
-}
-
-.map-icon:after {
-  content: '\269C';
-  font-size: 3.5rem;
-  align-self: center;
-  font-weight: bold;
-  margin-top: -2rem;
+.map_icon__painting:after {
+  margin-top: 1.3rem;
+  content: url('./svg/palette.svg');
   color: rgba(37, 51, 64, 1);
-  height: 3.6rem;
 }
 
-.icon-animation {
-  animation-name: notePlay;
-  animation-duration: 1.5s;
-  animation-timing-function: ease-out;
-}
-
-.icon-animation2 {
-  animation-name: retire;
-  animation-duration: 2s;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
-}
-
-.icon-selected {
-  background-color: rgba(37, 51, 64, 1);
-  box-shadow: 0px 0px 4px rgba(242, 179, 4, 1);
-}
-
-.icon-selected:after {
-  color: rgba(242, 179, 4, 1);
+.map_icon__wiki:after {
+  margin-top: 1.2rem;
+  margin-left: -0.1rem;
+  content: url('./svg/books.svg');
+  color: rgba(37, 51, 64, 1);
 }
