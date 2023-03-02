@@ -57,6 +57,7 @@ export default function App() {
   }, [title])
 
   useEffect(() => {
+    //   console.log('UUU ||| APP fetchpainiting data')
     fetchPaintingData()
   }, [fetchPaintingData])
 
@@ -73,6 +74,7 @@ export default function App() {
 
   return (
     <div id="App" className="App">
+      {/**console.log('RRR ||| APP RETURN')**/}
       <Search update={updateTitle} initialTitle={generateInitialTitle()} />
       {records && records[0] && <Painting paintings={records} />}
     </div>

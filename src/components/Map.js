@@ -2,6 +2,8 @@ import React, { memo, createRef, useEffect, useState } from 'react'
 //import GoogleMapReact from 'google-map-react'
 import L from 'leaflet'
 import { MapContainer, TileLayer, Marker, Tooltip, useMap } from 'react-leaflet'
+import { usePrevious } from '../utils/helpers'
+
 //import './App.scss';
 
 //const MAP_API_KEY = `${process.env.REACT_APP_MAP_API_KEY}`
@@ -14,6 +16,8 @@ export default function Map(props) {
   // const [zoom, setZoom] = useState(10)
   const [page, setPage] = useState(0)
   const [mapCenter, setMapCenter] = useState({})
+  const prevPage = usePrevious(page)
+  const prevPaintingPage = usePrevious(paintingPage)
 
   //const defaultPosition = [38.65727, -90.29789]
   /** 
@@ -100,86 +104,78 @@ export default function Map(props) {
   }
 
   useEffect(() => {
-    if (cityGeoI) {
+    if (cityGeoI && cityGeoI.lat) {
       //testjpf  rename cityGeoI
       setMapCenter(cityGeoI)
+      console.log('UUU ||| map ::: setMapCenter(cityGeoI)')
+      //console.log(cityGeoI)
     }
   }, [cityGeoI])
   useEffect(() => {
-    setPage(0)
-  }, [paintingPage])
+    if (prevPaintingPage !== paintingPage) {
+      setPage(0)
+      console.log('UUU ||| map ::: restet page t 0 on patnng change')
+    }
+  }, [paintingPage, prevPaintingPage])
   useEffect(() => {
-    if (page > -1) {
+    if (page > -1 && prevPage !== page) {
       //testjpf  rename cityGeoI
+      console.log('UUU ||| map ::: other painint coords')
+
       setPaintingCoords(page)
     }
-  }, [cityGeoI.lat, page, setPaintingCoords])
+  }, [page, prevPage, setPaintingCoords])
 
   return (
-    <div className="map__container">
-      <MapContainer
-        center={[coords[0].lat, coords[0].lon]}
-        zoom={14}
-        scrollWheelZoom={false}
-        style={{ height: '100%', minHeight: '100%', width: '100%' }}
-      >
-        <TileLayer
-          attribution=' Map data <br /> &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>,<br /> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>,<br />  Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+    <>
+      {coords && coords.length > 0 && wikicoords && wikicoords.length > 0 ? (
+        <div className="map__container">
+          {/**console.log('RRR ||| MAP RETURN')**/}
 
-        {coords && coords.length > 0 && renderItems(coords, 'painting')}
-        {wikicoords && wikicoords.length > 0 && renderItems(wikicoords, 'wiki')}
-        {mapCenter.lat && (
-          <RecenterAutomatically lat={mapCenter.lat} lon={mapCenter.lon} />
-        )}
-      </MapContainer>
-      <div className="map__paging_wrap">
-        <div className="map__paging page">
-          {page + 1} of {coords.length}
-          <br />
-          <button
-            className="prev"
-            onClick={() => setPage(page - 1)}
-            disabled={page === 0}
+          <MapContainer
+            center={[coords[0].lat, coords[0].lon]}
+            zoom={14}
+            scrollWheelZoom={false}
+            style={{ height: '100%', minHeight: '100%', width: '100%' }}
           >
-            previous
-          </button>{' '}
-          |{' '}
-          <button
-            className="next"
-            onClick={() => setPage(page + 1)}
-            disabled={page === coords.length - 1}
-          >
-            next
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-  /** 
-  render() {
-    if (this.state.center) {
-      return (
-        <div className="map-container">
-          <GoogleMapReact
-            bootstrapURLKeys={{ key: MAP_API_KEY }}
-            center={this.state.center}
-            zoom={this.zoom}
-          >
-            <MapMarker
-              lat={this.state.center.lat}
-              lng={this.state.center.lng}
-              text="My Marker"
+            <TileLayer
+              attribution=' Map data <br /> &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>,<br /> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>,<br />  Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-          </GoogleMapReact>
-        </div>
 
-      );
-    } else {
-      return (
+            {coords && coords.length > 0 && renderItems(coords, 'painting')}
+            {wikicoords &&
+              wikicoords.length > 0 &&
+              renderItems(wikicoords, 'wiki')}
+            {mapCenter.lat && (
+              <RecenterAutomatically lat={mapCenter.lat} lon={mapCenter.lon} />
+            )}
+          </MapContainer>
+          <div className="map__paging_wrap">
+            <div className="map__paging page">
+              {page + 1} of {coords.length}
+              <br />
+              <button
+                className="prev"
+                onClick={() => setPage(page - 1)}
+                disabled={page === 0}
+              >
+                previous
+              </button>{' '}
+              |{' '}
+              <button
+                className="next"
+                onClick={() => setPage(page + 1)}
+                disabled={page === coords.length - 1}
+              >
+                next
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
         <div></div>
-      );
-    }
-  } **/
+      )}
+    </>
+  )
 }

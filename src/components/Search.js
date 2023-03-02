@@ -198,6 +198,7 @@ export class Search extends Component {
     const { tags, suggestions } = this.state
     return (
       <div>
+        {/**console.log('RRR ||| SEARCH RETURN')*/}
         <div className="search">
           <ReactTags
             tags={tags}
