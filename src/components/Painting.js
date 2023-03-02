@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Wiki from './Wiki'
 import Map from './Map'
-//import { shuffle } from '../utils/helpers'
+import { usePrevious } from '../utils/helpers'
 import './Painting.scss'
 
 const countryLookup = {
@@ -25,10 +25,15 @@ const countryLookup = {
 
 export default function Painting(props) {
   const { paintings } = props
+
   const [page, setPage] = useState(0)
+  // const prevBusses = usePrevious(busses)
+  const prevPage = usePrevious(page)
   const [returnError, setReturnError] = useState(false)
   const [cityName, setCityName] = useState('')
-  const [cityGeoI, setCityGeoI] = useState([])
+  const prevCityName = usePrevious(cityName)
+
+  const [cityGeoI, setCityGeoI] = useState({})
   const [cityCoords, setCityCoords] = useState({})
   const [wikiCoords, setWikiCoords] = useState([])
   const [coordsI, setCitiesI] = useState(0)
@@ -81,19 +86,30 @@ export default function Painting(props) {
   }, [page, paintings])
 
   useEffect(() => {
-    setStyle()
-    placeNameForReverseGeo()
-  }, [placeNameForReverseGeo, page, setStyle])
+    if (page >= 0 && prevPage !== page) {
+      //console.log('UUU ||| paintin ::: set birthplace')
+
+      setStyle()
+      placeNameForReverseGeo()
+    }
+  }, [placeNameForReverseGeo, page, setStyle, prevPage])
 
   useEffect(() => {
-    cityName && cityName !== '' && getGeosNearPlaceName()
-  }, [cityName, getGeosNearPlaceName])
+    if (cityName && cityName !== '' && prevCityName !== cityName) {
+      getGeosNearPlaceName()
+      //console.log('UUU ||| paintin ::: find geos near painting place')
+    }
+  }, [cityName, getGeosNearPlaceName, prevCityName])
 
   //testjpf nedd to abstract this to a new painitng component??
   return (
     <main className="main">
-      {paintings && paintings.length > 0 ? (
+      {paintings &&
+      paintings.length > 0 &&
+      cityCoords &&
+      cityCoords.length > 0 ? (
         <>
+          {/**console.log('RRR ||| PAINTING RETURN')**/}
           <div className="painting__frame flx-ctr">
             <div className="heading">{paintings[page].title}</div>
             <div className="frame__cell left">

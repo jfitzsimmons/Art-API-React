@@ -1,9 +1,13 @@
 import React, { useCallback, useState, useEffect } from 'react'
+import { usePrevious } from '../utils/helpers'
 
 export default function Wiki(props) {
   const { cityName, coords, setcitygeoi, setwikicoords, coordsI } = props
   const [page, setPage] = useState(0)
   const [wikiResults, setWikiResults] = useState([])
+  const prevPage = usePrevious(page)
+  const prevCityName = usePrevious(cityName)
+
   //const [returnError, setReturnError] = useState(false)
 
   const getWikiData = useCallback(async () => {
@@ -39,25 +43,35 @@ export default function Wiki(props) {
   }, [coords, coordsI, setwikicoords])
 
   useEffect(() => {
-    if (coords) {
+    if (coords && coords.length > 0) {
+      //console.log('UUU ||| wiki ::: getWiki articles')
+
       getWikiData()
     }
   }, [getWikiData, coords, coordsI])
 
   useEffect(() => {
-    if (cityName) {
+    if (
+      cityName &&
+      page !== 0 &&
+      prevPage !== page &&
+      prevCityName !== cityName
+    ) {
+      //console.log('UUU ||| wiki ::: city change, set page to 0')
       setPage(0)
     }
-  }, [cityName, coordsI])
+  }, [cityName, page, prevCityName, prevPage])
 
   useEffect(() => {
     if (page > -1 && wikiResults && wikiResults.length > 0) {
+      //console.log('UUU ||| wiki ::: setcitygeoi?????????')
       setcitygeoi(wikiResults[page].coordinates[0])
     }
-  }, [page, setcitygeoi, wikiResults])
+  }, [page, prevPage, setcitygeoi, wikiResults])
 
   return (
     <div className="wiki">
+      {/**console.log('RRR ||| WIKI RETURN')**/}
       {wikiResults && wikiResults[page] ? (
         <div>
           <div className="page">
