@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-//import './App.scss';
 import { WithContext as ReactTags } from 'react-tag-input'
 
 const KeyCodes = {
@@ -13,11 +12,7 @@ export class Search extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tags: [
-        { id: 'earth', text: 'Earth' },
-        { id: 'wind', text: 'Wind' },
-        { id: 'fire', text: 'Fire' },
-      ],
+      tags: this.props.initialTitle ? this.props.initialTitle : [],
       suggestions: [
         { id: 'earth', text: 'Earth' },
         { id: 'portrait', text: 'Portrait' },

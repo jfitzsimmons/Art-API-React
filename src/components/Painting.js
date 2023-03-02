@@ -34,16 +34,11 @@ export default function Painting(props) {
   const [coordsI, setCitiesI] = useState(0)
 
   const getGeosNearPlaceName = useCallback(async () => {
-    console.log('getGeosNearPlaceName cityName', cityName)
-
     fetch(`https://geocode.maps.co/search?q=${cityName}`, {
       method: 'GET',
     })
       .then((response) => response.json())
       .then((responseData) => {
-        console.log('cityCoords')
-        console.dir(responseData)
-        //trstjpf randomy sort cityCoords!!!
         setCityCoords(responseData)
       })
       .catch((error) => {
@@ -63,10 +58,6 @@ export default function Painting(props) {
   }, [page, paintings])
 
   const placeNameForReverseGeo = useCallback(() => {
-    // console.log('findcityName - paintings[page].period', paintings[page].period)
-    //if (paintings[page].period)
-    // console.log(paintings[page].period.split(' ').shift())
-
     let birthplace =
       paintings[page].people && paintings[page].people.length > 0
         ? paintings[page].people[0].birthplace
@@ -76,46 +67,35 @@ export default function Painting(props) {
         birthplace.length > 23 ? birthplace.split(' ').pop() : birthplace
     } else {
       if (paintings[page].culture) {
-        console.log('CULTURE', paintings[page].culture)
         birthplace = countryLookup[paintings[page].culture]
       } else if (paintings[page].period) {
-        console.log('TRUE', paintings[page].period)
         birthplace = paintings[page].period.split(' ').shift()
       } else {
-        console.log('ELSE')
         birthplace =
           paintings[page].division.length > 23
             ? paintings[page].division.split(' ').shift()
             : paintings[page].division
       }
     }
-    //console.log('setCityName birthplace', birthplace)
     setCityName(birthplace)
   }, [page, paintings])
 
   useEffect(() => {
-    console.log('useEffect ::: page', page)
-
     setStyle()
     placeNameForReverseGeo()
   }, [placeNameForReverseGeo, page, setStyle])
 
   useEffect(() => {
-    console.log('useEffect ::: cityName', cityName)
-
     cityName && cityName !== '' && getGeosNearPlaceName()
   }, [cityName, getGeosNearPlaceName])
 
-  useEffect(() => {
-    console.log('useEffect ::: cityGeoI', cityGeoI)
-  }, [cityGeoI])
   //testjpf nedd to abstract this to a new painitng component??
   return (
-    <main class="main">
+    <main className="main">
       {paintings && paintings.length > 0 ? (
         <>
           <div className="painting__frame flx-ctr">
-            <span className="heading">{paintings[page].title}</span>
+            <div className="heading">{paintings[page].title}</div>
             <div className="frame__cell left">
               <img
                 className="painting__image"

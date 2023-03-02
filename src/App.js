@@ -6,10 +6,25 @@ import { objToQueryString } from './utils/helpers'
 
 const ART_API_KEY = `${process.env.REACT_APP_ART_API_KEY}`
 
+const initialTitles = [
+  'winter, spring, summer, fall',
+  'earth, wind, fire, water',
+  'moon, sun, stars, sky',
+  'heaven, hell, angel, demon',
+  'flowers, plants, trees, grass',
+  'mountain, prairie, field, hill',
+  'gala, party, celebration, festive',
+  'sea, ocean, river, lake',
+  'gold, silver, bronze, brass',
+  'day, night, dusk, dawn',
+  'north, south, east, west',
+  'rain, snow, thunder, fog',
+  'town, village, city, country',
+]
+
 export default function App() {
-  const [title, setTitle] = useState(
-    'winter, spring, summer, fall, snow, leaves, heat, flowers'
-  )
+  const initialTitle = initialTitles[(Math.random() * initialTitles.length) | 0]
+  const [title, setTitle] = useState(initialTitle)
   const [records, setRecords] = useState({})
   // const [returnError, setReturnError] = useState(false)
 
@@ -45,9 +60,20 @@ export default function App() {
     fetchPaintingData()
   }, [fetchPaintingData])
 
+  const generateInitialTitle = () => {
+    const outputTags = []
+    initialTitle.split(/\s*,\s*/).forEach(function (term) {
+      outputTags.push({
+        id: term,
+        text: term.charAt(0).toUpperCase() + term.slice(1),
+      })
+    })
+    return outputTags
+  }
+
   return (
     <div id="App" className="App">
-      <Search update={updateTitle} />
+      <Search update={updateTitle} initialTitle={generateInitialTitle()} />
       {records && records[0] && <Painting paintings={records} />}
     </div>
   )

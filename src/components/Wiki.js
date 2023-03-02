@@ -1,52 +1,22 @@
 import React, { useCallback, useState, useEffect } from 'react'
-//import { usePrevious } from '../utils/helpers'
-
-//import * as ReactDOM from 'react-dom'
-//import Map from './Map'
 
 export default function Wiki(props) {
   const { cityName, coords, setcitygeoi, setwikicoords, coordsI } = props
-  //const prevLat = usePrevious(coords[0].lat)
   const [page, setPage] = useState(0)
-  //const [coordsI, setCitiesI] = useState(0)
   const [wikiResults, setWikiResults] = useState([])
-
-  //const [wikiCoords, setWikiCoords] = useState([])
   //const [returnError, setReturnError] = useState(false)
-  //testjpf move to painting as well as coords state
 
   const getWikiData = useCallback(async () => {
     try {
-      console.log('coords[coordsI]')
-      console.log(coords[coordsI])
-      //testjpf see if you can get coordinates
       const res = await fetch(
         `https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=coordinates|extracts&exchars=530&exintro=true&generator=geosearch&ggsradius=10000&ggscoord=${coords[coordsI].lat}|${coords[coordsI].lon}&formatversion=2&format=json`
       )
       const data = await res.json()
 
-      // console.log('NESTED')
-      // console.dir(data)
-      //testjpf should move onto the next city coordinate if no query results
-      //${coords[1].lat}|${coords[1].lon}
-      //await data.query
-      //testjpf the idea is...
-      //if the length of query.pages is low , 0 or 1
-
-      //const sorted = data.query.pages.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-
       if (await data.query) {
-        console.log('data.query.page')
-        console.log(data.query.pages)
         if (data.query.pages.length < 1 || !data.query.pages) {
-          console.log(' setCitiesI(coordsI + 1)', coordsI + 1)
           //setCitiesI(coordsI + 1)
         } else {
-          console.log(
-            ' setWikiResults(data.query.pages)',
-            data.query.pages.length
-          )
-
           const cloned = data.query.pages.map(
             ({ title, pageid, coordinates }) => ({
               display_name: title,
@@ -57,7 +27,6 @@ export default function Wiki(props) {
           )
 
           setWikiResults(data.query.pages)
-          // send to painting?? testjpf
           setwikicoords(cloned)
         }
       } else {
@@ -71,30 +40,18 @@ export default function Wiki(props) {
 
   useEffect(() => {
     if (coords) {
-      console.log('WIKI ::: useEffect? - coords')
-
       getWikiData()
     }
   }, [getWikiData, coords, coordsI])
 
   useEffect(() => {
     if (cityName) {
-      console.log(
-        'WIKI ::: reset page to 0 on city change? - cityName',
-        cityName
-      )
-
       setPage(0)
     }
   }, [cityName, coordsI])
 
   useEffect(() => {
-    console.log('wikiResults')
-    console.log(wikiResults)
     if (page > -1 && wikiResults && wikiResults.length > 0) {
-      console.log('WIKI - page', page)
-      //console.log(wikiResults)
-      //testjpf, probably not needed.  somehow need to send wikiresult.page back to painting!!!
       setcitygeoi(wikiResults[page].coordinates[0])
     }
   }, [page, setcitygeoi, wikiResults])

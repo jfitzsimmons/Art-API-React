@@ -101,7 +101,6 @@ export default function Map(props) {
 
   useEffect(() => {
     if (cityGeoI) {
-      console.log('MAP :::   cityGeoI', cityGeoI.lat)
       //testjpf  rename cityGeoI
       setMapCenter(cityGeoI)
     }
@@ -111,7 +110,6 @@ export default function Map(props) {
   }, [paintingPage])
   useEffect(() => {
     if (page > -1) {
-      console.log('MAP :::   cityGeoI', cityGeoI.lat)
       //testjpf  rename cityGeoI
       setPaintingCoords(page)
     }
@@ -131,18 +129,10 @@ export default function Map(props) {
         />
 
         {coords && coords.length > 0 && renderItems(coords, 'painting')}
-        {console.log('wikicoords return map')}
         {wikicoords && wikicoords.length > 0 && renderItems(wikicoords, 'wiki')}
-
-        {
-          //testjpf works but needs markers
-          //copy renderItems() above and do the same for all citygeos
-          //this meeans I need all of wikiresults, (or at least filter out the coordinates for the markers) !!!
-
-          mapCenter.lat && (
-            <RecenterAutomatically lat={mapCenter.lat} lon={mapCenter.lon} />
-          )
-        }
+        {mapCenter.lat && (
+          <RecenterAutomatically lat={mapCenter.lat} lon={mapCenter.lon} />
+        )}
       </MapContainer>
       <div className="map__paging_wrap">
         <div className="map__paging page">

@@ -1,9 +1,7 @@
 @use '../assets/styles/vars';
 
 .main {
-  background: vars.$darkbluea;
-  padding: 6px;
-  border-radius: 12px;
+  padding: 0.9vmin;
   box-shadow: 0 0 36px 4px vars.$greena;
 }
 
@@ -12,11 +10,11 @@
   padding: 2% 10px;
   color: vars.$white-full;
   background: rgba(0, 0, 0, 0.4);
-  border-left: 2px solid vars.$green;
-  border-right: 2px solid vars.$green;
-  border-top: 3px solid vars.$green;
-  border-radius: 8px 8px 0 0;
-  box-shadow: 0 0 10px 5px vars.$darkblue;
+  border-left: 3px solid vars.$green;
+  border-right: 3px solid vars.$green;
+  border-top: 4px solid vars.$green;
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 0 2vmin 0.5vmin vars.$darkblue;
 }
 
 .frame__cell {
@@ -76,9 +74,9 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-bottom: 3px solid vars.$red;
-  border-left: 2px solid vars.$red;
-  border-radius: 0 0 0 8px;
+  border-bottom: 4px solid vars.$red;
+  border-left: 3px solid vars.$red;
+  border-radius: 0 0 0 18px;
   box-shadow: -6px -6px 18px 0px vars.$darkbluea;
   padding: 2%;
 }
@@ -104,9 +102,9 @@
   background: vars.$darkbluea;
   min-height: 512px;
   flex: 2;
-  border-bottom: 3px solid vars.$blue;
-  border-right: 2px solid vars.$blue;
-  border-radius: 0 0 8px 0;
+  border-bottom: 4px solid vars.$blue;
+  border-right: 3px solid vars.$blue;
+  border-radius: 0 0 18px 0;
   box-shadow: 6px -6px 18px 0px vars.$darkbluea;
 }
 
@@ -117,7 +115,7 @@
 }
 
 .leaflet-container {
-  border-radius: 0 0 8px 0;
+  border-radius: 0 0 18px 0;
 }
 
 .map_icon {

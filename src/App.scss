@@ -30,13 +30,17 @@ li {
 
 .heading {
   font-family: 'Playfair Display', serif;
-  font-size: 36px;
+  font-size: calc(0.5rem + 5vmin);
   letter-spacing: -1px;
   text-shadow: 1px 2px 3px vars.$darkgray;
   color: vars.$white-full;
   margin: vars.$btm-margin;
   width: 100%;
   text-align: center;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .search-error {
@@ -62,7 +66,7 @@ button {
   padding: 0.5em 1em;
   outline: none;
   border: none;
-  background-color: vars.$red;
+  background-color: vars.$green;
   border-radius: 4px;
 
   &:disabled {
@@ -109,6 +113,10 @@ button:hover {
 .search {
   margin: vars.$btm-margin;
   text-align: center;
+
+  button {
+    margin-left: 0.5em;
+  }
 }
 .ReactTags__tagInput {
   position: relative;
@@ -116,7 +124,6 @@ button:hover {
 }
 
 input {
-  width: 6.5em;
   color: vars.$darkgray;
   font-size: inherit;
   font-family: inherit;
@@ -137,7 +144,7 @@ input::placeholder {
 
 span.line {
   position: absolute;
-  background-color: vars.$red;
+  background-color: vars.$green;
   transition: transform 0.1s ease;
 }
 
@@ -201,16 +208,16 @@ input:focus ~ .left {
 }
 
 .ReactTags__tagInput {
-  margin: 0 5px;
+  margin: 18px 5px 0;
 }
 
 div.ReactTags__selected span.ReactTags__tag {
-  border: 2px solid vars.$gray;
   background: vars.$white-full;
+  color: vars.$darkgreen;
   font-size: 16px;
   display: inline-block;
   padding: 5px;
-  margin: 0 5px;
+  margin: 8px 6px 0 6px;
   cursor: move;
   border-radius: 4px;
 }
