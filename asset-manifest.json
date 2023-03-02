@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/Art-API-React/static/css/main.07412dbc.css",
-    "main.js": "/Art-API-React/static/js/main.775decf8.js",
+    "main.js": "/Art-API-React/static/js/main.f4aea33c.js",
     "index.html": "/Art-API-React/index.html",
     "main.07412dbc.css.map": "/Art-API-React/static/css/main.07412dbc.css.map",
-    "main.775decf8.js.map": "/Art-API-React/static/js/main.775decf8.js.map"
+    "main.f4aea33c.js.map": "/Art-API-React/static/js/main.f4aea33c.js.map"
   },
   "entrypoints": [
     "static/css/main.07412dbc.css",
-    "static/js/main.775decf8.js"
+    "static/js/main.f4aea33c.js"
   ]
 }
