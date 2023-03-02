@@ -20,7 +20,7 @@ export default function Wiki(props) {
           const cloned = data.query.pages.map(
             ({ title, pageid, coordinates }) => ({
               display_name: title,
-              page_id: pageid,
+              place_id: pageid,
               lat: coordinates[0].lat,
               lon: coordinates[0].lon,
             })

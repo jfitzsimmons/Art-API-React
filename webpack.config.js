@@ -5,7 +5,6 @@ const Dotenv = require('dotenv-webpack')
 
 module.exports = (env, argv) => ({
   mode: 'production',
-  //Where files should be sent once they are bundled
   output: {
     path: path.join(__dirname, '/build'),
     filename: 'index.bundle.js',
@@ -17,12 +16,9 @@ module.exports = (env, argv) => ({
   resolve: {
     extensions: ['.ts', '.js', '.tsx', '...'],
   },
-  //webpack 5 comes with devServer which loads in development mode
   devServer: {
     port: 3000,
-    //watchContentBase: true
   },
-  //Rules of how webpack will take our files, complie & bundle them for the browser
   module: {
     rules: [
       {
