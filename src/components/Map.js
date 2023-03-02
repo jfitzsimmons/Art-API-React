@@ -1,6 +1,6 @@
 import React, { memo, createRef, useEffect, useState } from 'react'
 //import GoogleMapReact from 'google-map-react'
-import L, { LatLngExpression } from 'leaflet'
+import L from 'leaflet'
 import { MapContainer, TileLayer, Marker, Tooltip, useMap } from 'react-leaflet'
 //import './App.scss';
 
@@ -15,7 +15,7 @@ export default function Map(props) {
   const [page, setPage] = useState(0)
   const [mapCenter, setMapCenter] = useState({})
 
-  const defaultPosition = [38.65727, -90.29789]
+  //const defaultPosition = [38.65727, -90.29789]
   /** 
   constructor(props) {
     super(props);
