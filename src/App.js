@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import './App.scss'
 import { Search } from './components/Search'
-import Painting from './components/Painting'
+import Results from './components/Results'
 import { objToQueryString } from './utils/helpers'
 
 const ART_API_KEY = `${process.env.REACT_APP_ART_API_KEY}`
@@ -13,13 +13,14 @@ const initialTitles = [
   'heaven, hell, angel, demon',
   'flowers, plants, trees, grass',
   'mountain, prairie, field, hill',
-  'gala, party, celebration, festive',
+  'gathering, party, celebration, festive',
   'sea, ocean, river, lake',
   'gold, silver, bronze, brass',
   'day, night, dusk, dawn',
   'north, south, east, west',
   'rain, snow, thunder, fog',
   'town, village, city, country',
+  'music, choir, band, song',
 ]
 
 export default function App() {
@@ -74,9 +75,9 @@ export default function App() {
 
   return (
     <div id="App" className="App">
-      {/**console.log('RRR ||| APP RETURN')**/}
+      {console.log('RRR ||| APP RETURN')}
       <Search update={updateTitle} initialTitle={generateInitialTitle()} />
-      {records && records[0] && <Painting paintings={records} />}
+      {records && records[0] && <Results paintings={records} />}
     </div>
   )
 }

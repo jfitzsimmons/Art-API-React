@@ -1,115 +1,29 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import Wiki from './Wiki'
-import Map from './Map'
+import React from 'react'
 import { usePrevious } from '../utils/helpers'
-import './Painting.scss'
-
-const countryLookup = {
-  Italian: 'italy',
-  French: 'france',
-  American: 'america',
-  Indian: 'india',
-  India: 'india',
-  Chinese: 'china',
-  Japanese: 'japan',
-  Dutch: 'netherlands',
-  German: 'germany',
-  Korean: 'korea',
-  Persian: 'persia',
-}
 
 //testjpf painting ID is used to get object that has places
 //use place id to get lat long.  use lat long to get wikipeida search results
 // update map with  marker for paint place and wikipedia results?
 //make it so if you click on marker it takes you to that "page" in pagination for wiki result
 
-export default function Painting(props) {
-  const { paintings } = props
-
-  const [page, setPage] = useState(0)
-  // const prevBusses = usePrevious(busses)
-  const prevPage = usePrevious(page)
-  const [returnError, setReturnError] = useState(false)
-  const [cityName, setCityName] = useState('')
-  const prevCityName = usePrevious(cityName)
-
-  const [cityGeoI, setCityGeoI] = useState({})
-  const [cityCoords, setCityCoords] = useState({})
-  const [wikiCoords, setWikiCoords] = useState([])
-  const [coordsI, setCitiesI] = useState(0)
-
-  const getGeosNearPlaceName = useCallback(async () => {
-    fetch(`https://geocode.maps.co/search?q=${cityName}`, {
-      method: 'GET',
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
-        setCityCoords(responseData)
-      })
-      .catch((error) => {
-        setReturnError(true)
-        console.log(error)
-      })
-  }, [cityName])
-
-  const setStyle = useCallback(async () => {
-    const colors = paintings[page].colors
-    let gradient = ''
-    for (let i = colors.length; i--; ) {
-      gradient += colors[i].color
-      gradient += i === 0 ? ')' : ', '
-    }
-    document.body.style.background = `radial-gradient(circle at bottom right, ${gradient}`
-  }, [page, paintings])
-
-  const placeNameForReverseGeo = useCallback(() => {
-    let birthplace =
-      paintings[page].people && paintings[page].people.length > 0
-        ? paintings[page].people[0].birthplace
-        : null
-    if (birthplace) {
-      birthplace =
-        birthplace.length > 23 ? birthplace.split(' ').pop() : birthplace
-    } else {
-      if (paintings[page].culture) {
-        birthplace = countryLookup[paintings[page].culture]
-      } else if (paintings[page].period) {
-        birthplace = paintings[page].period.split(' ').shift()
-      } else {
-        birthplace =
-          paintings[page].division.length > 23
-            ? paintings[page].division.split(' ').shift()
-            : paintings[page].division
-      }
-    }
-    setCityName(birthplace)
-  }, [page, paintings])
-
-  useEffect(() => {
-    if (page >= 0 && prevPage !== page) {
-      //console.log('UUU ||| paintin ::: set birthplace')
-
-      setStyle()
-      placeNameForReverseGeo()
-    }
-  }, [placeNameForReverseGeo, page, setStyle, prevPage])
-
-  useEffect(() => {
-    if (cityName && cityName !== '' && prevCityName !== cityName) {
-      getGeosNearPlaceName()
-      //console.log('UUU ||| paintin ::: find geos near painting place')
-    }
-  }, [cityName, getGeosNearPlaceName, prevCityName])
+export default React.memo(function Painting(props) {
+  const { paintings, cityName, page, setPage } = props
+  const prevTitle = usePrevious(cityName)
 
   //testjpf nedd to abstract this to a new painitng component??
+
+  //testjpf start here too many call just in painting paging
+  //what is i processed props into local state with useEffect
+  //and populated return with localstate
+
   return (
-    <main className="main">
+    <>
       {paintings &&
       paintings.length > 0 &&
-      cityCoords &&
-      cityCoords.length > 0 ? (
+      paintings[page] &&
+      cityName !== '' ? (
         <>
-          {/**console.log('RRR ||| PAINTING RETURN')**/}
+          {console.log('RRR ||| PAINTING RETURN')}
           <div className="painting__frame flx-ctr">
             <div className="heading">{paintings[page].title}</div>
             <div className="frame__cell left">
@@ -163,49 +77,20 @@ export default function Painting(props) {
               </div>
             </div>
           </div>
-          <div className="map-wiki flx-ctr wrap">
-            <Wiki
-              setwikicoords={setWikiCoords}
-              setcitygeoi={setCityGeoI}
-              cityName={cityName}
-              coords={cityCoords}
-              coordsI={coordsI}
-            />
-            <div className="map">
-              {/** 
-            Wrong "america"??? next / prev | change wikiresults{' '}
-            <p>Locations found for {cityName}:</p>*/}
-              {cityCoords[0] && (
-                <Map
-                  wikicoords={wikiCoords}
-                  cityGeoI={cityGeoI}
-                  coords={cityCoords}
-                  setPaintingCoords={setCitiesI}
-                  paintingPage={page}
-                />
-              )}
-            </div>
-          </div>
         </>
       ) : (
         <div>
           <div className="render-coontainer">
-            {returnError ? (
-              <div className="search-error">
-                ERROR: {this.props.title} did not return any results
+            <div className="painting flx-ctr">
+              <div>
+                <svg className="loading" viewBox="25 25 50 50">
+                  <circle cx="50" cy="50" r="20"></circle>
+                </svg>
               </div>
-            ) : (
-              <div className="painting flx-ctr">
-                <div>
-                  <svg className="loading" viewBox="25 25 50 50">
-                    <circle cx="50" cy="50" r="20"></circle>
-                  </svg>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         </div>
       )}
-    </main>
+    </>
   )
-}
+})

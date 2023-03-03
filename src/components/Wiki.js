@@ -1,54 +1,58 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import { usePrevious } from '../utils/helpers'
 
-export default function Wiki(props) {
-  const { cityName, coords, setcitygeoi, setwikicoords, coordsI } = props
+export default React.memo(function Wiki(props) {
+  const { cityName, coords, setWikiPageCoords, setwikicoords, coordsI } = props
   const [page, setPage] = useState(0)
+  const [returnError, setReturnError] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [wikiResults, setWikiResults] = useState([])
   const prevPage = usePrevious(page)
+  const prevCoordsI = usePrevious(coordsI)
   const prevCityName = usePrevious(cityName)
 
   //const [returnError, setReturnError] = useState(false)
 
   const getWikiData = useCallback(async () => {
     try {
+      setIsLoading(true)
       const res = await fetch(
         `https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=coordinates|extracts&exchars=530&exintro=true&generator=geosearch&ggsradius=10000&ggscoord=${coords[coordsI].lat}|${coords[coordsI].lon}&formatversion=2&format=json`
       )
       const data = await res.json()
 
-      if (await data.query) {
-        if (data.query.pages.length < 1 || !data.query.pages) {
-          //setCitiesI(coordsI + 1)
-        } else {
-          const cloned = data.query.pages.map(
-            ({ title, pageid, coordinates }) => ({
-              display_name: title,
-              place_id: pageid,
-              lat: coordinates[0].lat,
-              lon: coordinates[0].lon,
-            })
-          )
+      if ((await data.query) && data.query.pages.length > 1) {
+        console.log(`All good`)
+        const cloned = data.query.pages.map(
+          ({ title, pageid, coordinates }) => ({
+            display_name: title,
+            place_id: pageid,
+            lat: coordinates[0].lat,
+            lon: coordinates[0].lon,
+          })
+        )
 
-          setWikiResults(data.query.pages)
-          setwikicoords(cloned)
-        }
+        setWikiResults(data.query.pages)
+        setwikicoords(cloned)
       } else {
-        // setCitiesI(coordsI + 1)
+        console.log(`setWikiResults([])`)
+        setWikiResults([])
       }
     } catch (error) {
       console.log(`Something went wrong: ${error}`)
-      return null
+      setReturnError(true)
+    } finally {
+      setIsLoading(false)
     }
   }, [coords, coordsI, setwikicoords])
 
   useEffect(() => {
     if (coords && coords.length > 0) {
-      //console.log('UUU ||| wiki ::: getWiki articles')
+      console.log('UUU ||| wiki ::: getWiki articles')
 
       getWikiData()
     }
-  }, [getWikiData, coords, coordsI])
+  }, [getWikiData, coords])
 
   useEffect(() => {
     if (
@@ -57,23 +61,24 @@ export default function Wiki(props) {
       prevPage !== page &&
       prevCityName !== cityName
     ) {
-      //console.log('UUU ||| wiki ::: city change, set page to 0')
+      console.log('UUU ||| wiki ::: city change, set page to 0')
       setPage(0)
     }
   }, [cityName, page, prevCityName, prevPage])
 
   useEffect(() => {
     if (page > -1 && wikiResults && wikiResults.length > 0) {
-      //console.log('UUU ||| wiki ::: setcitygeoi?????????')
-      setcitygeoi(wikiResults[page].coordinates[0])
+      console.log('UUU ||| wiki ::: setWikiPageCoords?????????')
+      setWikiPageCoords(wikiResults[page].coordinates[0])
     }
-  }, [page, prevPage, setcitygeoi, wikiResults])
+  }, [page, setWikiPageCoords, wikiResults])
 
   return (
     <div className="wiki">
-      {/**console.log('RRR ||| WIKI RETURN')**/}
-      {wikiResults && wikiResults[page] ? (
+      {wikiResults && wikiResults.length > 0 && isLoading === false ? (
         <div>
+          {console.log('RRR ||| WIKI RETURNwikiResults EXIST')}
+
           <div className="page">
             {page + 1} of {wikiResults.length}
             <br />
@@ -113,14 +118,27 @@ export default function Wiki(props) {
           </div>
         </div>
       ) : (
-        <div className="wiki">
-          <div>
-            <svg className="loading" viewBox="25 25 50 50">
-              <circle cx="50" cy="50" r="20"></circle>
-            </svg>
+        <div>
+          <div className="render-coontainer">
+            {returnError && (
+              <div className="search-error">ERROR: something went wrong</div>
+            )}
+            {isLoading ? (
+              <div className="painting flx-ctr">
+                <div>
+                  <svg className="loading" viewBox="25 25 50 50">
+                    <circle cx="50" cy="50" r="20"></circle>
+                  </svg>
+                </div>
+              </div>
+            ) : (
+              <div className="no-results">
+                {coords[coordsI].display_name} did not return any results
+              </div>
+            )}
           </div>
         </div>
       )}
     </div>
   )
-}
+})

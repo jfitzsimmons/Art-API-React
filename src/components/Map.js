@@ -6,73 +6,36 @@ import { usePrevious } from '../utils/helpers'
 
 //import './App.scss';
 
-//const MAP_API_KEY = `${process.env.REACT_APP_MAP_API_KEY}`
 const markerRefs = []
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function Map(props) {
-  const { coords, cityGeoI, wikicoords, setPaintingCoords, paintingPage } =
-    props
+export default React.memo(function Map(props) {
+  const {
+    coords,
+    wikiPageCoords,
+    wikicoords,
+    setPaintingCoords,
+    paintingPage,
+  } = props
   // const [zoom, setZoom] = useState(10)
   const [page, setPage] = useState(0)
   const [mapCenter, setMapCenter] = useState({})
   const prevPage = usePrevious(page)
   const prevPaintingPage = usePrevious(paintingPage)
 
-  //const defaultPosition = [38.65727, -90.29789]
-  /** 
-  constructor(props) {
-    super(props);
-    this.state = {
-      center: {
-        lat: this.props.lat,
-        lng: this.props.lng
-      }
-    }
-    this.zoom = 10;
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.lat !== prevProps.lat) {
-      this.setState({
-       center: {
-         lat: this.props.lat,
-         lng: this.props.lng
-       }
-      })
-    }
-  }
-
-  interface Place {
-    place_id: number
-    lat: number
-    lon: number
-    timestamp: string
-    label: string
-    distance?: number
-    mph?: number
-    timing?: number
-  }
-  */
   const renderItems = (coords, icon) => {
     return (
       coords &&
-      coords.map(
-        (place) => (
-          <Post
-            iconClass={`map_icon__${icon}`}
-            key={place.place_id}
-            place={place}
-          />
-        )
-
-        // wikicoords &&
-        //wikicoords.map((place) => <Post key={place.place_id} place={place} />
-      )
+      coords.map((place) => (
+        <Post
+          iconClass={`map_icon__${icon}`}
+          key={place.place_id}
+          place={place}
+        />
+      ))
     )
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Post = memo(({ place, iconClass }) => {
     const newRef = createRef()
     markerRefs.push(newRef)
@@ -104,13 +67,12 @@ export default function Map(props) {
   }
 
   useEffect(() => {
-    if (cityGeoI && cityGeoI.lat) {
-      //testjpf  rename cityGeoI
-      setMapCenter(cityGeoI)
-      console.log('UUU ||| map ::: setMapCenter(cityGeoI)')
-      //console.log(cityGeoI)
+    if (wikiPageCoords && wikiPageCoords.lat) {
+      //testjpf  rename wikiPageCoords
+      setMapCenter(wikiPageCoords)
+      console.log('UUU ||| map ::: setMapCenter(wikiPageCoords)')
     }
-  }, [cityGeoI])
+  }, [wikiPageCoords])
   useEffect(() => {
     if (prevPaintingPage !== paintingPage) {
       setPage(0)
@@ -119,7 +81,7 @@ export default function Map(props) {
   }, [paintingPage, prevPaintingPage])
   useEffect(() => {
     if (page > -1 && prevPage !== page) {
-      //testjpf  rename cityGeoI
+      //testjpf  rename wikiPageCoords
       console.log('UUU ||| map ::: other painint coords')
 
       setPaintingCoords(page)
@@ -128,9 +90,10 @@ export default function Map(props) {
 
   return (
     <>
-      {coords && coords.length > 0 && wikicoords && wikicoords.length > 0 ? (
+      {(coords && coords.length > 0) ||
+      (wikicoords && wikicoords.length > 0) ? (
         <div className="map__container">
-          {/**console.log('RRR ||| MAP RETURN')**/}
+          {console.log('RRR ||| MAP RETURN')}
 
           <MapContainer
             center={[coords[0].lat, coords[0].lon]}
@@ -178,4 +141,4 @@ export default function Map(props) {
       )}
     </>
   )
-}
+})
