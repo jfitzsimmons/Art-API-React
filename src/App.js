@@ -20,18 +20,15 @@ const initialTitles = [
   'north, south, east, west',
   'rain, snow, thunder, fog',
   'town, village, city, country',
-  'music, choir, band, song',
+  'music, melody, harmony, song',
 ]
 
 export default function App() {
   const initialTitle = initialTitles[(Math.random() * initialTitles.length) | 0]
   const [title, setTitle] = useState(initialTitle)
   const [records, setRecords] = useState({})
-  // const [returnError, setReturnError] = useState(false)
 
-  const updateTitle = (subject) => {
-    setTitle(subject)
-  }
+  // const [returnError, setReturnError] = useState(false)
 
   const fetchPaintingData = useCallback(() => {
     const queryString = () => {
@@ -76,7 +73,7 @@ export default function App() {
   return (
     <div id="App" className="App">
       {console.log('RRR ||| APP RETURN')}
-      <Search update={updateTitle} initialTitle={generateInitialTitle()} />
+      <Search update={setTitle} initialTitle={generateInitialTitle()} />
       {records && records[0] && <Results paintings={records} />}
     </div>
   )

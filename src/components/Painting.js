@@ -1,20 +1,7 @@
 import React from 'react'
-import { usePrevious } from '../utils/helpers'
-
-//testjpf painting ID is used to get object that has places
-//use place id to get lat long.  use lat long to get wikipeida search results
-// update map with  marker for paint place and wikipedia results?
-//make it so if you click on marker it takes you to that "page" in pagination for wiki result
 
 export default React.memo(function Painting(props) {
   const { paintings, cityName, page, setPage } = props
-  const prevTitle = usePrevious(cityName)
-
-  //testjpf nedd to abstract this to a new painitng component??
-
-  //testjpf start here too many call just in painting paging
-  //what is i processed props into local state with useEffect
-  //and populated return with localstate
 
   return (
     <>
@@ -23,7 +10,6 @@ export default React.memo(function Painting(props) {
       paintings[page] &&
       cityName !== '' ? (
         <>
-          {console.log('RRR ||| PAINTING RETURN')}
           <div className="painting__frame flx-ctr">
             <div className="heading">{paintings[page].title}</div>
             <div className="frame__cell left">

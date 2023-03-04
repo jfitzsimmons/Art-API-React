@@ -2,43 +2,58 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Wiki from './Wiki'
 import Map from './Map'
 import Painting from './Painting'
-import { usePrevious } from '../utils/helpers'
+import { usePrevious, countryLookup } from '../utils/helpers'
 import './Painting.scss'
 
-const countryLookup = {
-  Italian: 'italy',
-  French: 'france',
-  American: 'america',
-  Indian: 'india',
-  India: 'india',
-  Chinese: 'china',
-  Japanese: 'japan',
-  Dutch: 'netherlands',
-  German: 'germany',
-  Korean: 'korea',
-  Persian: 'persia',
-  British: 'britain',
-  Netherlandish: 'netherlands',
-  Russian: 'russia',
+const setStyle = (colors) => {
+  let gradient = ''
+  for (let i = colors.length; i--; ) {
+    gradient += colors[i].color
+    gradient += i === 0 ? ')' : ', '
+  }
+  document.body.style.background = `radial-gradient(circle at bottom right, ${gradient}`
 }
 
-//testjpf painting ID is used to get object that has places
-//use place id to get lat long.  use lat long to get wikipeida search results
-// update map with  marker for paint place and wikipedia results?
-//make it so if you click on marker it takes you to that "page" in pagination for wiki result
+const placeNameForReverseGeo = (p) => {
+  let birthplace =
+    p.people && p.people.length > 0 ? p.people[0].birthplace : null
+  if (birthplace) {
+    birthplace =
+      birthplace.length > 23 ? birthplace.split(' ').pop() : birthplace
+  } else {
+    if (p.culture) {
+      birthplace = countryLookup[p.culture]
+        ? countryLookup[p.culture]
+        : p.culture.split(' ').shift()
+    } else if (p.period) {
+      birthplace = p.period.split(' ').shift()
+      console.log('paint PERIOD birthplace', birthplace)
+    } else if (p.division) {
+      birthplace =
+        p.division.length > 23 ? p.division.split(' ').shift() : p.division
+    }
+  }
+
+  if (!birthplace) console.log(p)
+  console.log('PAINTING placeNameForReverseGeo', birthplace)
+  return birthplace
+}
+
+//testjpf make it so if you click on marker it takes you to that "page" in pagination for wiki result
 
 export default React.memo(function Results(props) {
   const { paintings } = props
+  const prevRecordsId = usePrevious(paintings[0].id)
+  const [isLoading, setIsLoading] = useState(true)
   const [page, setPage] = useState(0)
-  const [reset, setReset] = useState(false)
   const prevPage = usePrevious(page)
   const [returnError, setReturnError] = useState(false)
   const [cityName, setCityName] = useState('')
   const prevCityName = usePrevious(cityName)
-  const [wikiPageCoords, setWikiPageCoords] = useState({})
-  const [cityCoords, setCityCoords] = useState({})
+  const [mapCenter, setMapCenter] = useState({})
+  const [geoResultCoords, setGeoResultCoords] = useState({})
   const [wikiCoords, setWikiCoords] = useState([])
-  const [coordsI, setCitiesI] = useState(0)
+  const [geoResultsI, setGeoResultsI] = useState(0)
 
   const getGeosNearPlaceName = useCallback(async () => {
     fetch(`https://geocode.maps.co/search?q=${cityName}`, {
@@ -46,7 +61,7 @@ export default React.memo(function Results(props) {
     })
       .then((response) => response.json())
       .then((responseData) => {
-        setCityCoords(responseData)
+        setGeoResultCoords(responseData)
       })
       .catch((error) => {
         setReturnError(true)
@@ -54,93 +69,40 @@ export default React.memo(function Results(props) {
       })
   }, [cityName])
 
-  const setStyle = useCallback(async () => {
-    const colors = paintings[page].colors
-    let gradient = ''
-    for (let i = colors.length; i--; ) {
-      gradient += colors[i].color
-      gradient += i === 0 ? ')' : ', '
-    }
-    document.body.style.background = `radial-gradient(circle at bottom right, ${gradient}`
-  }, [page, paintings])
-
-  //externalize this and return birthplace!!! TESTJpF
-  const placeNameForReverseGeo = useCallback(
-    (p) => {
-      let birthplace =
-        paintings[p].people && paintings[p].people.length > 0
-          ? paintings[p].people[0].birthplace
-          : null
-      if (birthplace) {
-        birthplace =
-          birthplace.length > 23 ? birthplace.split(' ').pop() : birthplace
-      } else {
-        if (paintings[p].culture) {
-          birthplace = countryLookup[paintings[p].culture]
-            ? countryLookup[paintings[p].culture]
-            : paintings[p].culture.split(' ').shift()
-        } else if (paintings[p].period) {
-          birthplace = paintings[p].period.split(' ').shift()
-          console.log('paint PERIOD birthplace', birthplace)
-        } else {
-          birthplace =
-            paintings[p].division.length > 23
-              ? paintings[p].division.split(' ').shift()
-              : paintings[p].division
-        }
-      }
-
-      if (!birthplace) console.log(paintings[p])
-      console.log('PAINTING placeNameForReverseGeo')
-      setCityName(birthplace)
-    },
-    [paintings]
-  )
-
-  const updatePaintings = useCallback(() => {
-    setStyle()
-    placeNameForReverseGeo(page)
-  }, [page, placeNameForReverseGeo, setStyle])
-
   useEffect(() => {
-    console.log('reset prevPage, page', prevPage, page)
-    console.log('paint RESET RESET RESET', reset)
-    if (
-      (page >= 0 && prevPage !== page) ||
-      (reset === true && prevPage !== page)
-    ) {
-      console.log('UUU ||| Results ::: set birthplace - RESET', reset)
-      updatePaintings()
-      setReset(false)
+    if (page && page >= 0 && prevPage !== page && paintings[page]) {
+      //page through current painitngs
+      setIsLoading(true)
+      setStyle(paintings[page].colors)
+      setCityName(placeNameForReverseGeo(paintings[page]))
+    } else if (page >= 0 && prevRecordsId !== paintings[0].id) {
+      //new paintings from search
+      setIsLoading(true)
+      setStyle(paintings[0].colors)
+      setCityName(placeNameForReverseGeo(paintings[0]))
+      setPage(0)
     }
-  }, [page, prevPage, reset, updatePaintings])
+  }, [page, paintings, prevPage, prevRecordsId])
 
   useEffect(() => {
     if (cityName && cityName !== '' && prevCityName !== cityName) {
+      //get coordinates around painting location
       getGeosNearPlaceName()
-      console.log('UUU ||| Results ::: find geos near painting place')
+    } else if (cityName && cityName !== '' && prevCityName === cityName) {
+      setIsLoading(false)
     }
-  }, [cityName, getGeosNearPlaceName, prevCityName, paintings])
+  }, [cityName, getGeosNearPlaceName, prevCityName])
 
-  useEffect(() => {
-    console.log('PAINTINGS CHANGED')
-    //these two things will always be 0 and true at the same time!!! TESTJPF
-    //setPage(0)
-    //setReset(true)
-    placeNameForReverseGeo(0)
-  }, [paintings, placeNameForReverseGeo])
-
-  //testjpf nedd to abstract this to a new painitng component??
+  //Testjpf abstract error component
   return (
     <main className="main">
-      {paintings && paintings.length > 0 ? (
+      {paintings && paintings.length > 0 && isLoading === false ? (
         <>
           {paintings[page] &&
-            cityCoords &&
-            cityCoords.length > 0 &&
+            geoResultCoords &&
+            geoResultCoords.length > 0 &&
             cityName !== '' && (
               <div>
-                {console.log('painting comp in RESULTS!!!')}
                 <Painting
                   paintings={paintings}
                   cityName={cityName}
@@ -151,30 +113,29 @@ export default React.memo(function Results(props) {
             )}
           <div className="map-wiki flx-ctr wrap">
             {paintings[page] &&
-              cityCoords &&
-              cityCoords.length > 0 &&
+              geoResultCoords &&
+              geoResultCoords.length > 0 &&
               cityName !== '' && (
                 <Wiki
-                  setwikicoords={setWikiCoords}
-                  setWikiPageCoords={setWikiPageCoords}
+                  setWikiCoords={setWikiCoords}
+                  setMapCenter={setMapCenter}
                   cityName={cityName}
-                  coords={cityCoords}
-                  coordsI={coordsI}
+                  coords={geoResultCoords}
+                  geoResultsI={geoResultsI}
                 />
               )}
             <div className="map">
               {/** 
             Wrong "america"??? next / prev | change wikiresults{' '}
             <p>Locations found for {cityName}:</p>*/}
-              {cityCoords[0] &&
-                page > -1 &&
+              {page > -1 &&
                 ((wikiCoords && wikiCoords.length > 0) ||
-                  (wikiPageCoords && wikiPageCoords.length > 0)) && (
+                  (geoResultCoords && geoResultCoords.length > 0)) && (
                   <Map
                     wikicoords={wikiCoords}
-                    wikiPageCoords={wikiPageCoords}
-                    coords={cityCoords}
-                    setPaintingCoords={setCitiesI}
+                    wikiMapCenter={mapCenter}
+                    coords={geoResultCoords}
+                    setGeoResultsI={setGeoResultsI}
                     paintingPage={page}
                   />
                 )}
@@ -184,17 +145,20 @@ export default React.memo(function Results(props) {
       ) : (
         <div>
           <div className="render-coontainer">
-            {returnError ? (
-              <div className="search-error">
-                ERROR: {this.props.title} did not return any results
-              </div>
-            ) : (
+            {returnError && (
+              <div className="search-error">ERROR: something went wrong</div>
+            )}
+            {isLoading ? (
               <div className="painting flx-ctr">
                 <div>
                   <svg className="loading" viewBox="25 25 50 50">
                     <circle cx="50" cy="50" r="20"></circle>
                   </svg>
                 </div>
+              </div>
+            ) : (
+              <div className="no-results">
+                These tags did not return any results
               </div>
             )}
           </div>

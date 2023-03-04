@@ -39,3 +39,20 @@ export function shuffle(array) {
 
   return array
 }
+
+export const countryLookup = {
+  Italian: 'italy',
+  French: 'france',
+  American: 'america',
+  Indian: 'india',
+  India: 'india',
+  Chinese: 'china',
+  Japanese: 'japan',
+  Dutch: 'netherlands',
+  German: 'germany',
+  Korean: 'korea',
+  Persian: 'persia',
+  British: 'britain',
+  Netherlandish: 'netherlands',
+  Russian: 'russia',
+}

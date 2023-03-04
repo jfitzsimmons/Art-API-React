@@ -1,23 +1,13 @@
 import React, { memo, createRef, useEffect, useState } from 'react'
-//import GoogleMapReact from 'google-map-react'
 import L from 'leaflet'
 import { MapContainer, TileLayer, Marker, Tooltip, useMap } from 'react-leaflet'
 import { usePrevious } from '../utils/helpers'
 
-//import './App.scss';
-
 const markerRefs = []
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default React.memo(function Map(props) {
-  const {
-    coords,
-    wikiPageCoords,
-    wikicoords,
-    setPaintingCoords,
-    paintingPage,
-  } = props
-  // const [zoom, setZoom] = useState(10)
+  const { coords, wikiMapCenter, wikicoords, setGeoResultsI, paintingPage } =
+    props
   const [page, setPage] = useState(0)
   const [mapCenter, setMapCenter] = useState({})
   const prevPage = usePrevious(page)
@@ -67,34 +57,28 @@ export default React.memo(function Map(props) {
   }
 
   useEffect(() => {
-    if (wikiPageCoords && wikiPageCoords.lat) {
-      //testjpf  rename wikiPageCoords
-      setMapCenter(wikiPageCoords)
-      console.log('UUU ||| map ::: setMapCenter(wikiPageCoords)')
+    if (wikiMapCenter && wikiMapCenter.lat) {
+      setMapCenter(wikiMapCenter)
     }
-  }, [wikiPageCoords])
+  }, [wikiMapCenter])
+
   useEffect(() => {
     if (prevPaintingPage !== paintingPage) {
       setPage(0)
-      console.log('UUU ||| map ::: restet page t 0 on patnng change')
     }
   }, [paintingPage, prevPaintingPage])
+
   useEffect(() => {
     if (page > -1 && prevPage !== page) {
-      //testjpf  rename wikiPageCoords
-      console.log('UUU ||| map ::: other painint coords')
-
-      setPaintingCoords(page)
+      setGeoResultsI(page)
     }
-  }, [page, prevPage, setPaintingCoords])
+  }, [page, prevPage, setGeoResultsI])
 
   return (
     <>
       {(coords && coords.length > 0) ||
       (wikicoords && wikicoords.length > 0) ? (
         <div className="map__container">
-          {console.log('RRR ||| MAP RETURN')}
-
           <MapContainer
             center={[coords[0].lat, coords[0].lon]}
             zoom={14}
@@ -106,10 +90,22 @@ export default React.memo(function Map(props) {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-            {coords && coords.length > 0 && renderItems(coords, 'painting')}
-            {wikicoords &&
-              wikicoords.length > 0 &&
-              renderItems(wikicoords, 'wiki')}
+            {
+              coords &&
+                coords.length > 0 &&
+                renderItems(
+                  coords,
+                  'painting'
+                ) /** coordinates from geo search */
+            }
+            {
+              wikicoords &&
+                wikicoords.length > 0 &&
+                renderItems(
+                  wikicoords,
+                  'wiki'
+                ) /** coordinates from wiki articles */
+            }
             {mapCenter.lat && (
               <RecenterAutomatically lat={mapCenter.lat} lon={mapCenter.lon} />
             )}
