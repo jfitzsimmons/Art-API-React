@@ -63,7 +63,7 @@ export const setStyle = (colors) => {
     gradient += colors[i].color
     gradient += i === 0 ? ')' : ', '
   }
-  document.body.style.background = `radial-gradient(circle at bottom right, ${gradient}`
+  document.body.style.background = `radial-gradient(farthest-corner at 100% 100%, ${gradient}`
 }
 
 export const placeNameForReverseGeo = (p) => {
