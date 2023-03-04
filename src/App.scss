@@ -3,6 +3,7 @@
 html {
   margin: 0;
   padding: 0;
+  background-color: vars.$darkblue;
 }
 
 body {
@@ -41,6 +42,7 @@ li {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+  min-height: 5vh;
 }
 
 .search-error {

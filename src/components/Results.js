@@ -8,8 +8,9 @@ import './Painting.scss'
 //testjpf make it so if you click on marker it takes you to that "page" in pagination for wiki result
 
 export default React.memo(function Results(props) {
-  const { paintings } = props
+  const { paintings, resultsId } = props
   const prevRecordsId = usePrevious(paintings[0].id)
+  const prevResultsId = usePrevious(resultsId)
   const [isLoading, setIsLoading] = useState(true)
   const [page, setPage] = useState(0)
   const prevPage = usePrevious(page)
@@ -17,7 +18,7 @@ export default React.memo(function Results(props) {
   const [cityName, setCityName] = useState('')
   const prevCityName = usePrevious(cityName)
   const [mapCenter, setMapCenter] = useState({})
-  const [geoResultCoords, setGeoResultCoords] = useState({})
+  const [geoResultCoords, setGeoResultCoords] = useState()
   const [wikiCoords, setWikiCoords] = useState([])
   const [geoResultsI, setGeoResultsI] = useState(0)
 
@@ -54,29 +55,36 @@ export default React.memo(function Results(props) {
     if (cityName && cityName !== '' && prevCityName !== cityName) {
       //get coordinates around painting location
       getGeosNearPlaceName()
-    } else if (cityName && cityName !== '' && prevCityName === cityName) {
+      //clean up conditional testjpf???
+    } else if (
+      (cityName &&
+        cityName !== '' &&
+        prevCityName === cityName &&
+        prevResultsId !== resultsId) ||
+      (cityName &&
+        cityName !== '' &&
+        prevResultsId === resultsId &&
+        isLoading === true)
+    ) {
       setIsLoading(false)
     }
-  }, [cityName, getGeosNearPlaceName, prevCityName])
+  }, [cityName, getGeosNearPlaceName, isLoading, prevCityName, prevResultsId, resultsId])
 
   //Testjpf abstract error component
   return (
     <main className="main">
       {paintings && paintings.length > 0 && isLoading === false ? (
         <>
-          {paintings[page] &&
-            geoResultCoords &&
-            geoResultCoords.length > 0 &&
-            cityName !== '' && (
-              <div>
-                <Painting
-                  paintings={paintings}
-                  cityName={cityName}
-                  page={page}
-                  setPage={setPage}
-                />
-              </div>
+          <div className="painting__frame flx-ctr">
+            {paintings[page] && geoResultCoords && cityName !== '' && (
+              <Painting
+                paintings={paintings}
+                cityName={cityName}
+                page={page}
+                setPage={setPage}
+              />
             )}
+          </div>
           <div className="map-wiki flx-ctr wrap">
             {paintings[page] &&
               geoResultCoords &&
@@ -109,25 +117,23 @@ export default React.memo(function Results(props) {
           </div>
         </>
       ) : (
-        <div>
-          <div className="render-coontainer">
-            {returnError && (
-              <div className="search-error">ERROR: something went wrong</div>
-            )}
-            {isLoading ? (
-              <div className="painting flx-ctr">
-                <div>
-                  <svg className="loading" viewBox="25 25 50 50">
-                    <circle cx="50" cy="50" r="20"></circle>
-                  </svg>
-                </div>
+        <div className="painting__frame flx-ctr">
+          {returnError && (
+            <div className="search-error">ERROR: something went wrong</div>
+          )}
+          {isLoading ? (
+            <div className="painting flx-ctr">
+              <div>
+                <svg className="loading" viewBox="25 25 50 50">
+                  <circle cx="50" cy="50" r="20"></circle>
+                </svg>
               </div>
-            ) : (
-              <div className="no-results">
-                These tags did not return any results
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="no-results">
+              These tags did not return any results
+            </div>
+          )}
         </div>
       )}
     </main>

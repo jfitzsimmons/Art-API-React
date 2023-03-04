@@ -9,6 +9,7 @@ export default React.memo(function Wiki(props) {
   const [wikiResults, setWikiResults] = useState([])
   const prevPage = usePrevious(page)
   const prevCityName = usePrevious(cityName)
+  const prevGeoResultsI = usePrevious(geoResultsI)
 
   //const [returnError, setReturnError] = useState(false)
 
@@ -51,14 +52,15 @@ export default React.memo(function Wiki(props) {
 
   useEffect(() => {
     if (
-      cityName &&
-      page !== 0 &&
-      prevPage !== page &&
-      prevCityName !== cityName
+      (cityName &&
+        page !== 0 &&
+        prevPage !== page &&
+        prevCityName !== cityName) ||
+      (prevGeoResultsI !== undefined && prevGeoResultsI !== geoResultsI)
     ) {
       setPage(0) //reset on painting change
     }
-  }, [cityName, page, prevCityName, prevPage])
+  }, [cityName, geoResultsI, page, prevCityName, prevGeoResultsI, prevPage])
 
   useEffect(() => {
     if (page > -1 && wikiResults && wikiResults.length > 0) {
