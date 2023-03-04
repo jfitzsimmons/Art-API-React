@@ -39,3 +39,52 @@ export function shuffle(array) {
 
   return array
 }
+
+export const countryLookup = {
+  Italian: 'italy',
+  French: 'france',
+  American: 'america',
+  Indian: 'india',
+  India: 'india',
+  Chinese: 'china',
+  Japanese: 'japan',
+  Dutch: 'netherlands',
+  German: 'germany',
+  Korean: 'korea',
+  Persian: 'persia',
+  British: 'britain',
+  Netherlandish: 'netherlands',
+  Russian: 'russia',
+}
+
+export const setStyle = (colors) => {
+  let gradient = ''
+  for (let i = colors.length; i--; ) {
+    gradient += colors[i].color
+    gradient += i === 0 ? ')' : ', '
+  }
+  document.body.style.background = `radial-gradient(circle at bottom right, ${gradient}`
+}
+
+export const placeNameForReverseGeo = (p) => {
+  let birthplace =
+    p.people && p.people.length > 0 ? p.people[0].birthplace : null
+  if (birthplace) {
+    birthplace =
+      birthplace.length > 23 ? birthplace.split(' ').pop() : birthplace
+  } else {
+    if (p.culture) {
+      birthplace = countryLookup[p.culture]
+        ? countryLookup[p.culture]
+        : p.culture.split(' ').shift()
+    } else if (p.period) {
+      birthplace = p.period.split(' ').shift()
+    } else if (p.division) {
+      birthplace =
+        p.division.length > 23 ? p.division.split(' ').shift() : p.division
+    }
+  }
+
+  if (!birthplace) console.log(p)
+  return birthplace
+}
