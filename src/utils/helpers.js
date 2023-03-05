@@ -58,12 +58,16 @@ export const countryLookup = {
 }
 
 export const setStyle = (colors) => {
+  const ha = ['left', 'center', 'right']
+  const va = ['top', 'center', 'bottom']
   let gradient = ''
   for (let i = colors.length; i--; ) {
     gradient += colors[i].color
     gradient += i === 0 ? ')' : ', '
   }
-  document.body.style.background = `radial-gradient(farthest-corner at 100% 100%, ${gradient}`
+  document.body.style.background = `radial-gradient(circle at ${
+    ha[(Math.random() * 3) | 0]
+  } ${va[(Math.random() * 3) | 0]}, ${gradient}`
 }
 
 export const placeNameForReverseGeo = (p) => {

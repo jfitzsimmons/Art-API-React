@@ -76,8 +76,7 @@ export default React.memo(function Map(props) {
 
   return (
     <>
-      {(coords && coords.length > 0) ||
-      (wikicoords && wikicoords.length > 0) ? (
+      {coords && coords.length > 0 && wikicoords && wikicoords.length > 0 ? (
         <div className="map__container">
           <MapContainer
             center={[coords[0].lat, coords[0].lon]}

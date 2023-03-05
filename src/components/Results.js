@@ -122,12 +122,10 @@ export default React.memo(function Results(props) {
             <div className="search-error">ERROR: something went wrong</div>
           )}
           {isLoading ? (
-            <div className="painting flx-ctr">
-              <div>
-                <svg className="loading" viewBox="25 25 50 50">
-                  <circle cx="50" cy="50" r="20"></circle>
-                </svg>
-              </div>
+            <div className="painting flx-ctr fadein">
+              <svg className="loading" viewBox="25 25 50 50">
+                <circle cx="50" cy="50" r="20"></circle>
+              </svg>
             </div>
           ) : (
             <div className="no-results">

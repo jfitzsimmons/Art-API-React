@@ -10,6 +10,7 @@ body {
   font-family: 'Raleway', sans-serif;
   padding: 2%;
   color: vars.$darkgray;
+  background-size: 100vw 100vh;
 }
 
 a:active,
@@ -29,6 +30,36 @@ li {
   list-style-type: none;
 }
 
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  width: fit-content;
+  flex-wrap: wrap;
+
+  button {
+    margin-left: 0.5em;
+  }
+}
+.search__random_btn {
+  padding: 6px 12px 0;
+  margin: 11px 6px 0;
+}
+
+.search__art_terms {
+  background-color: vars.$darkgray;
+  color: vars.$white-full;
+  margin: 1vmin 0 20px 38vmin;
+  padding: 6px;
+  text-align: center;
+}
+
 .heading {
   font-family: 'Playfair Display', serif;
   font-size: calc(0.5rem + 5vmin);
@@ -36,13 +67,13 @@ li {
   text-shadow: 1px 2px 3px vars.$darkgray;
   color: vars.$white-full;
   margin: vars.$btm-margin;
-  width: 100%;
   text-align: center;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
   min-height: 5vh;
+  max-width: 1400px;
 }
 
 .search-error {
@@ -108,18 +139,15 @@ button:hover {
   display: flex;
 }
 
+.break {
+  flex-basis: 100%;
+  height: 0;
+}
+
 .wrap {
   flex-wrap: wrap;
 }
 
-.search {
-  margin: vars.$btm-margin;
-  text-align: center;
-
-  button {
-    margin-left: 0.5em;
-  }
-}
 .ReactTags__tagInput {
   position: relative;
   display: inline-block;
@@ -259,6 +287,20 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   cursor: pointer;
 }
 
+.fadein {
+  animation: fadein 1s 0.3s forwards 1;
+  filter: opacity(0);
+}
+
+@keyframes fadein {
+  0% {
+    filter: opacity(0);
+  }
+  100% {
+    filter: opacity(1);
+  }
+}
+
 .loading {
   width: 275px;
   transform-origin: center;
@@ -301,13 +343,13 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 
 .map_icon__painting:after {
   margin-top: 1.3rem;
-  content: url('./svg/palette.svg');
+  content: url('./assets/svg/palette.svg');
   color: rgba(37, 51, 64, 1);
 }
 
 .map_icon__wiki:after {
   margin-top: 1.2rem;
   margin-left: -0.1rem;
-  content: url('./svg/books.svg');
+  content: url('./assets/svg/books.svg');
   color: rgba(37, 51, 64, 1);
 }

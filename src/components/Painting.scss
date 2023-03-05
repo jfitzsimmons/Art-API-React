@@ -4,19 +4,26 @@
   box-shadow: 0 0 36px 4px vars.$greena;
   padding: 0.9vmin;
   min-height: 90vh;
+  min-width: 85vw;
+  max-width: 1700px;
 }
 
 .painting__frame {
   flex-wrap: wrap;
-  padding: 2% 10px;
-  color: vars.$white-full;
   background: rgba(0, 0, 0, 0.4);
   border-left: 3px solid vars.$green;
   border-right: 3px solid vars.$green;
   border-top: 4px solid vars.$green;
   border-radius: 18px 18px 0 0;
   box-shadow: 0 0 2vmin 0.5vmin vars.$darkblue;
+  color: vars.$white-full;
   min-height: 60vh;
+  padding: 2% 10px;
+}
+
+.landscape_icon {
+  height: 100%;
+  width: 100%;
 }
 
 .frame__cell {
@@ -47,6 +54,10 @@
   min-height: 25vh;
   max-height: 120vh;
   height: 100%;
+}
+
+.landscape_icon {
+  height: 48vh;
 }
 
 .painting__paging {
@@ -155,7 +166,7 @@
 
 .map__paging_wrap {
   position: relative;
-  top: -92px;
+  top: -90px;
   z-index: 99999;
   display: flex;
   justify-content: center;

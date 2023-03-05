@@ -1,8 +1,15 @@
 import React, { createRef } from 'react'
+import LandscapeIcon from '../assets/svg/landscape.svg'
 
 export default React.memo(function Painting(props) {
   const { paintings, cityName, page, setPage } = props
   const labelRef = createRef()
+
+  function getWidth() {
+    return `height=${Math.round(
+      window.innerHeight * 1.2
+    )}&width=${Math.round(window.innerWidth * 0.56)}`
+  }
 
   const AsyncImage = (props) => {
     const [loadedSrc, setLoadedSrc] = React.useState(null)
@@ -25,7 +32,17 @@ export default React.memo(function Painting(props) {
       page && labelRef.current.scrollIntoView({ behavior: 'smooth' })
       return <img {...props} />
     }
-    return null
+    return (
+      <div className="painting flx-ctr">
+        <div>
+          <img
+            className="landscape_icon"
+            src={LandscapeIcon}
+            alt="random search term icon"
+          />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -38,10 +55,11 @@ export default React.memo(function Painting(props) {
           <div ref={labelRef} className="heading">
             {paintings[page].title}
           </div>
+          <div className="break"></div>
           <div className="frame__cell left">
             <AsyncImage
               className="painting__image"
-              src={paintings[page].primaryimageurl}
+              src={`${paintings[page].primaryimageurl}?${getWidth()}`}
               alt={'image of ' + paintings[page].title}
             />
           </div>
@@ -86,12 +104,10 @@ export default React.memo(function Painting(props) {
       ) : (
         <div>
           <div className="render-coontainer">
-            <div className="painting flx-ctr">
-              <div>
-                <svg className="loading" viewBox="25 25 50 50">
-                  <circle cx="50" cy="50" r="20"></circle>
-                </svg>
-              </div>
+            <div className="painting flx-ctr fadein">
+              <svg className="loading" viewBox="25 25 50 50">
+                <circle cx="50" cy="50" r="20"></circle>
+              </svg>
             </div>
           </div>
         </div>

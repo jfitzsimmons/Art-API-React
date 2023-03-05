@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { WithContext as ReactTags } from 'react-tag-input'
+import RandomIcon from '../assets/svg/random.svg'
 
 const KeyCodes = {
   comma: 188,
@@ -8,11 +9,45 @@ const KeyCodes = {
 
 const delimiters = [KeyCodes.comma, KeyCodes.enter]
 
+const initialTitles = [
+  'winter, spring, summer, fall',
+  'earth, wind, fire, water',
+  'moon, sun, stars, sky',
+  'heaven, hell, angel, demon',
+  'flowers, plants, trees, grass',
+  'mountain, prairie, field, hill',
+  'gathering, party, celebration, festive',
+  'sea, ocean, river, lake',
+  'gold, silver, bronze, brass',
+  'day, night, dusk, dawn',
+  'north, south, west, travel',
+  'rain, snow, mist, fog',
+  'town, village, city, country',
+  'music, melody, harmony, song',
+  'street, path, road, trail',
+  'drink, feast, merry, meal',
+]
+
+const initialTitle = initialTitles[(Math.random() * initialTitles.length) | 0]
+
+const generateInitialTags = (t) => {
+  const outputTags = []
+  t.split(/\s*,\s*/).forEach(function (term) {
+    outputTags.push({
+      id: term,
+      text: term.charAt(0).toUpperCase() + term.slice(1),
+    })
+  })
+  return outputTags
+}
+
+const initialTags = generateInitialTags(initialTitle)
+
 export class Search extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tags: this.props.initialTitle ? this.props.initialTitle : [],
+      tags: initialTags,
       suggestions: [
         { id: 'earth', text: 'Earth' },
         { id: 'portrait', text: 'Portrait' },
@@ -151,6 +186,7 @@ export class Search extends Component {
     this.handleDelete = this.handleDelete.bind(this)
     this.handleAddition = this.handleAddition.bind(this)
     this.handleDrag = this.handleDrag.bind(this)
+    this.randomSearch = this.randomSearch.bind(this)
   }
 
   setTagList() {
@@ -194,23 +230,48 @@ export class Search extends Component {
     this.setState({ tags: newTags })
   }
 
+  randomSearch() {
+    this.setState(
+      {
+        tags: generateInitialTags(
+          initialTitles[(Math.random() * initialTitles.length) | 0]
+        ),
+      },
+      () => {
+        this.props.update(this.setTagList())
+      }
+    )
+  }
+
   render() {
     const { tags, suggestions } = this.state
     return (
-      <div>
+      <>
         <div className="search">
-          <ReactTags
-            tags={tags}
-            suggestions={suggestions}
-            handleDelete={this.handleDelete}
-            handleAddition={this.handleAddition}
-            handleDrag={this.handleDrag}
-            delimiters={delimiters}
-            onChange={this.handleAddition}
-            autofocus={false}
-          />
+          <div className="search__tags flx-ctr">
+            <button
+              className="search__random_btn"
+              onClick={() => this.randomSearch()}
+            >
+              <img src={RandomIcon} alt="random search term icon" />
+            </button>
+            <ReactTags
+              tags={tags}
+              suggestions={suggestions}
+              handleDelete={this.handleDelete}
+              handleAddition={this.handleAddition}
+              handleDrag={this.handleDrag}
+              delimiters={delimiters}
+              onChange={this.handleAddition}
+              autofocus={false}
+            />
+          </div>
+          <div className="break"></div>
+          <div className="search__art_terms">
+            Enter terms to search through the Harvard Art Museums' collections
+          </div>
         </div>
-      </div>
+      </>
     )
   }
 }
