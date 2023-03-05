@@ -29,12 +29,12 @@ module.exports = (env, argv) => ({
         },
       },
       {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url-loader',
-      },
-      {
         test: /\.(css|sass|scss)$/i,
         use: ['style-loader', 'css-loader', 'sass-loader'],
+      },
+      {
+        test: /\.(png|jp(e*)g|svg|gif)$/,
+        type: 'asset/resource',
       },
     ],
   },

@@ -58,12 +58,16 @@ export const countryLookup = {
 }
 
 export const setStyle = (colors) => {
+  const ha = ['left', 'center', 'right']
+  const va = ['top', 'center', 'bottom']
   let gradient = ''
   for (let i = colors.length; i--; ) {
     gradient += colors[i].color
     gradient += i === 0 ? ')' : ', '
   }
-  document.body.style.background = `radial-gradient(circle at bottom right, ${gradient}`
+  document.body.style.background = `radial-gradient(circle at ${
+    ha[(Math.random() * 3) | 0]
+  } ${va[(Math.random() * 3) | 0]}, ${gradient}`
 }
 
 export const placeNameForReverseGeo = (p) => {
@@ -87,4 +91,17 @@ export const placeNameForReverseGeo = (p) => {
 
   if (!birthplace) console.log(p)
   return birthplace
+}
+
+export function makeid(length) {
+  let result = ''
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const charactersLength = characters.length
+  let counter = 0
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    counter += 1
+  }
+  return result
 }

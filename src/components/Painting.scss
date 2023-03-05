@@ -1,20 +1,29 @@
 @use '../assets/styles/vars';
 
 .main {
-  padding: 0.9vmin;
   box-shadow: 0 0 36px 4px vars.$greena;
+  padding: 0.9vmin;
+  min-height: 90vh;
+  min-width: 85vw;
+  max-width: 1700px;
 }
 
 .painting__frame {
   flex-wrap: wrap;
-  padding: 2% 10px;
-  color: vars.$white-full;
   background: rgba(0, 0, 0, 0.4);
   border-left: 3px solid vars.$green;
   border-right: 3px solid vars.$green;
   border-top: 4px solid vars.$green;
   border-radius: 18px 18px 0 0;
   box-shadow: 0 0 2vmin 0.5vmin vars.$darkblue;
+  color: vars.$white-full;
+  min-height: 60vh;
+  padding: 2% 10px;
+}
+
+.landscape_icon {
+  height: 100%;
+  width: 100%;
 }
 
 .frame__cell {
@@ -24,19 +33,31 @@
 .frame__cell.left {
   min-width: 400px;
   max-width: 800px;
+  max-height: 120vh;
+  height: 100%;
 }
 
 .frame__cell.right {
   align-self: center;
   background: vars.$darkgray;
+  box-shadow: 9px 0 27px 0px vars.$darkblue;
   max-width: 350px;
   min-width: 250px;
 }
 
 .painting__image {
   border: 6px solid vars.$darkgray;
-  max-width: 100%;
+  box-shadow: 0 0 36px 0px vars.$greena;
   box-sizing: border-box;
+  max-width: 100%;
+  min-width: 25vw;
+  min-height: 25vh;
+  max-height: 120vh;
+  height: 100%;
+}
+
+.landscape_icon {
+  height: 48vh;
 }
 
 .painting__paging {
@@ -139,13 +160,13 @@
 }
 
 .map_icon__painting {
-  background-color: rgba(147, 163, 28, 0.7);
+  background-color: rgba(48, 105, 179, 0.7);
   box-shadow: 0px 0px 4px rgba(24, 27, 39, 0.9);
 }
 
 .map__paging_wrap {
   position: relative;
-  top: -92px;
+  top: -90px;
   z-index: 99999;
   display: flex;
   justify-content: center;
