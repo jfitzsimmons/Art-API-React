@@ -1,9 +1,16 @@
-import React, { createRef } from 'react'
-import LandscapeIcon from '../assets/svg/landscape.svg'
+import React, {
+  createRef,
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+} from 'react'
 
 export default React.memo(function Painting(props) {
   const { paintings, cityName, page, setPage } = props
+  const [seed, setSeed] = useState(1)
   const labelRef = createRef()
+  const timeouts = useMemo(() => [], [])
 
   function getWidth() {
     return `height=${Math.round(
@@ -11,9 +18,25 @@ export default React.memo(function Painting(props) {
     )}&width=${Math.round(window.innerWidth * 0.56)}`
   }
 
-  const AsyncImage = (props) => {
-    const [loadedSrc, setLoadedSrc] = React.useState(null)
-    React.useEffect(() => {
+  const reloadImg = () => {
+    cancelReload()
+    reset()
+  }
+
+  const cancelReload = useCallback(async () => {
+    for (let i = timeouts.length; i--; ) {
+      clearTimeout(timeouts[i])
+      timeouts.pop(i)
+    }
+  }, [timeouts])
+
+  const reset = () => {
+    setSeed(Math.random())
+  }
+
+  const AsyncImage = React.memo((props) => {
+    const [loadedSrc, setLoadedSrc] = useState(null)
+    useEffect(() => {
       setLoadedSrc(null)
       if (props.src) {
         const handleLoad = () => {
@@ -30,20 +53,32 @@ export default React.memo(function Painting(props) {
     }, [props.src])
     if (loadedSrc === props.src) {
       page && labelRef.current.scrollIntoView({ behavior: 'smooth' })
+      cancelReload()
       return <img {...props} />
+    } else {
+      timeouts.length < 1 && timeouts.push(setTimeout(reloadImg, 2500))
     }
     return (
-      <div className="painting flx-ctr">
-        <div>
-          <img
+      <div className="painting__image">
+        <div className="flx-ctr fadein image__loading">
+          {/**<img
             className="landscape_icon"
             src={LandscapeIcon}
             alt="random search term icon"
-          />
+    />**/}
+          <svg className="loading" viewBox="25 25 50 50">
+            <circle cx="50" cy="50" r="20"></circle>
+          </svg>
         </div>
       </div>
     )
-  }
+  })
+
+  useEffect(() => {
+    return () => {
+      timeouts.length > 0 && cancelReload()
+    }
+  }, [cancelReload, timeouts.length])
 
   return (
     <>
@@ -56,9 +91,10 @@ export default React.memo(function Painting(props) {
             {paintings[page].title}
           </div>
           <div className="break"></div>
-          <div className="frame__cell left">
+          <div className="frame__cell left ">
             <AsyncImage
-              className="painting__image"
+              className=" left painting__image"
+              key={seed}
               src={`${paintings[page].primaryimageurl}?${getWidth()}`}
               alt={'image of ' + paintings[page].title}
             />
@@ -71,7 +107,7 @@ export default React.memo(function Painting(props) {
                   {paintings[page].people[0].name}
                 </span>
               )}
-              <span className="label__region row">{cityName}</span>
+              <span className="label__region row green">{cityName}</span>
               <span className="label__dated row">{paintings[page].dated}</span>
               <span className="label__period row">
                 {paintings[page].period}
@@ -102,13 +138,11 @@ export default React.memo(function Painting(props) {
           </div>
         </>
       ) : (
-        <div>
-          <div className="render-coontainer">
-            <div className="painting flx-ctr fadein">
-              <svg className="loading" viewBox="25 25 50 50">
-                <circle cx="50" cy="50" r="20"></circle>
-              </svg>
-            </div>
+        <div className="render-coontainer">
+          <div className="painting flx-ctr fadein">
+            <svg className="loading" viewBox="25 25 50 50">
+              <circle cx="50" cy="50" r="20"></circle>
+            </svg>
           </div>
         </div>
       )}

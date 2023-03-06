@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { usePrevious } from '../utils/helpers'
 
 export default React.memo(function Wiki(props) {
@@ -10,11 +10,13 @@ export default React.memo(function Wiki(props) {
   const prevPage = usePrevious(page)
   const prevCityName = usePrevious(cityName)
   const prevGeoResultsI = usePrevious(geoResultsI)
+  const mountedRef = useRef(true)
 
   //const [returnError, setReturnError] = useState(false)
 
   const getWikiData = useCallback(async () => {
     try {
+      console.log('try get articles')
       setIsLoading(true)
       const res = await fetch(
         `https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=coordinates|extracts&exchars=530&exintro=true&generator=geosearch&ggsradius=10000&ggscoord=${coords[geoResultsI].lat}|${coords[geoResultsI].lon}&formatversion=2&format=json`
@@ -30,7 +32,9 @@ export default React.memo(function Wiki(props) {
             lon: coordinates[0].lon,
           })
         )
-
+        console.log('mountedRef.current', mountedRef.current)
+        if (!mountedRef.current) return null
+        console.log('pass fetch mounted check')
         setWikiResults(data.query.pages)
         setWikiCoords(cloned) //for map
       } else {
@@ -46,7 +50,11 @@ export default React.memo(function Wiki(props) {
 
   useEffect(() => {
     if (coords && coords.length > 0) {
+      mountedRef.current = true
       getWikiData()
+    }
+    return () => {
+      mountedRef.current = false
     }
   }, [getWikiData, coords])
 
@@ -65,6 +73,10 @@ export default React.memo(function Wiki(props) {
   useEffect(() => {
     if (page > -1 && wikiResults && wikiResults.length > 0) {
       setMapCenter(wikiResults[page].coordinates[0])
+      setIsLoading(false)
+    }
+    return () => {
+      mountedRef.current = false
     }
   }, [page, setMapCenter, wikiResults])
 
@@ -92,11 +104,23 @@ export default React.memo(function Wiki(props) {
             </button>
           </div>
           <div className="wiki__results">
+            <div className="label__title row">
+              <p>
+                <span className="green">{cityName}</span> addresses from
+                OpenStreetMaps{' '}
+              </p>
+              <p>
+                Address #{geoResultsI + 1}:{' '}
+                <span className="blue">{coords[geoResultsI].display_name}</span>
+              </p>
+            </div>
             <span className="label__title row">
-              Wikipedia results for articles from the regions around around{' '}
-              {coords[geoResultsI].display_name}:
+              <span className="red">Wikipedia</span> articles found around{' '}
+              <span className="blue">address #{geoResultsI + 1}</span>
+              <br /> Article #{page + 1}
+              {': '}
+              <span className="red">{wikiResults[page].title}</span>
             </span>
-            <span className="label__title row">{wikiResults[page].title}</span>
             <div
               dangerouslySetInnerHTML={{ __html: wikiResults[page].extract }}
             />

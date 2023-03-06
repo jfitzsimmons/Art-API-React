@@ -209,6 +209,7 @@ export class Search extends Component {
       'afterend',
       '<span class="bottom line"></span><span class="right line"></span><span class="top line"></span><span class="left line"></span>'
     )
+    this.props.update(this.setTagList())
   }
 
   handleDelete(i) {
@@ -278,7 +279,8 @@ export class Search extends Component {
           </div>
           <div className="break"></div>
           <div className="search__art_terms">
-            Enter terms to search through the Harvard Art Museums' collections
+            Enter terms to search through the <b>Harvard Art Museums</b>'
+            collections
           </div>
         </div>
       </>

@@ -76,12 +76,18 @@ export default React.memo(function Map(props) {
 
   return (
     <>
+      <div className="map__container__key">
+        <div className="map_icon map_icon__painting"></div>
+        <div className="key__label">Address</div>
+        <div className="map_icon map_icon__wiki"></div>
+        <div className="key__label">Article</div>
+      </div>
       {(coords && coords.length > 0) ||
       (wikicoords && wikicoords.length > 0) ? (
         <div className="map__container">
           <MapContainer
             center={
-              coords[0]
+              coords && coords[0] && coords[0].lat
                 ? [coords[0].lat, coords[0].lon]
                 : [mapCenter.lat, mapCenter.lon]
             }
