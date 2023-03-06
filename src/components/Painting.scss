@@ -60,6 +60,10 @@
   height: 100%;
 }
 
+.image__loading {
+  padding: 2%;
+}
+
 .landscape_icon {
   height: 48vh;
 }
@@ -132,9 +136,18 @@
   box-shadow: 6px -6px 18px 0px vars.$darkbluea;
   min-height: 512px;
   min-width: 200px;
+  position: relative;
   circle {
     stroke: vars.$blue;
   }
+}
+
+.map::after {
+  content: '\275B...and so it goes.\275C';
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  font-size: 1.5em;
 }
 
 .map__container {

@@ -68,12 +68,10 @@ li {
   color: vars.$white-full;
   margin: vars.$btm-margin;
   text-align: center;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
   overflow: hidden;
   min-height: 5vh;
   max-width: 1400px;
+  max-height: calc(90px + 6vmin);
 }
 
 .search-error {

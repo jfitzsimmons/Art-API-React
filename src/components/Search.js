@@ -278,7 +278,8 @@ export class Search extends Component {
           </div>
           <div className="break"></div>
           <div className="search__art_terms">
-            Enter terms to search through the Harvard Art Museums' collections
+            Enter terms to search through the <b>Harvard Art Museums</b>'
+            collections
           </div>
         </div>
       </>
