@@ -5,7 +5,6 @@ import React, {
   useState,
   useMemo,
 } from 'react'
-//import LandscapeIcon from '../assets/svg/landscape.svg'
 
 export default React.memo(function Painting(props) {
   const { paintings, cityName, page, setPage } = props
@@ -35,7 +34,7 @@ export default React.memo(function Painting(props) {
     setSeed(Math.random())
   }
 
-  const AsyncImage = (props) => {
+  const AsyncImage = React.memo((props) => {
     const [loadedSrc, setLoadedSrc] = useState(null)
     useEffect(() => {
       setLoadedSrc(null)
@@ -57,7 +56,7 @@ export default React.memo(function Painting(props) {
       cancelReload()
       return <img {...props} />
     } else {
-      timeouts.length < 1 && timeouts.push(setTimeout(reloadImg, 4000))
+      timeouts.length < 1 && timeouts.push(setTimeout(reloadImg, 2500))
     }
     return (
       <div className="painting__image">
@@ -73,7 +72,7 @@ export default React.memo(function Painting(props) {
         </div>
       </div>
     )
-  }
+  })
 
   useEffect(() => {
     return () => {
@@ -108,7 +107,7 @@ export default React.memo(function Painting(props) {
                   {paintings[page].people[0].name}
                 </span>
               )}
-              <span className="label__region row">{cityName}</span>
+              <span className="label__region row green">{cityName}</span>
               <span className="label__dated row">{paintings[page].dated}</span>
               <span className="label__period row">
                 {paintings[page].period}

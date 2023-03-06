@@ -7,8 +7,7 @@ import { objToQueryString, makeid } from './utils/helpers'
 const ART_API_KEY = `${process.env.REACT_APP_ART_API_KEY}`
 
 export default function App() {
-  const [title, setTitle] = useState('')
-  //const [tags, setTags] = useState(initialTags)
+  const [title, setTitle] = useState(null)
   const [records, setRecords] = useState({})
   const [resultsId, setResultsId] = useState(0)
 
@@ -40,7 +39,7 @@ export default function App() {
   }, [title])
 
   useEffect(() => {
-    fetchPaintingData()
+    ;(title || title === '') && fetchPaintingData()
   }, [fetchPaintingData, title])
 
   return (

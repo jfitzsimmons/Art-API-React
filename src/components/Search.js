@@ -209,6 +209,7 @@ export class Search extends Component {
       'afterend',
       '<span class="bottom line"></span><span class="right line"></span><span class="top line"></span><span class="left line"></span>'
     )
+    this.props.update(this.setTagList())
   }
 
   handleDelete(i) {

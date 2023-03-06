@@ -8,9 +8,7 @@ html {
 
 body {
   font-family: 'Raleway', sans-serif;
-  padding: 2%;
   color: vars.$darkgray;
-  background-size: 100vw 100vh;
 }
 
 a:active,
@@ -30,10 +28,23 @@ li {
   list-style-type: none;
 }
 
+.red {
+  color: vars.$darkred;
+}
+
+.blue {
+  color: vars.$blue;
+}
+
+.green {
+  color: vars.$darkgreen;
+}
+
 .App {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 2%;
 }
 
 .search {
@@ -337,17 +348,4 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 
 .page {
   text-align: center;
-}
-
-.map_icon__painting:after {
-  margin-top: 1.3rem;
-  content: url('./assets/svg/palette.svg');
-  color: rgba(37, 51, 64, 1);
-}
-
-.map_icon__wiki:after {
-  margin-top: 1.2rem;
-  margin-left: -0.1rem;
-  content: url('./assets/svg/books.svg');
-  color: rgba(37, 51, 64, 1);
 }

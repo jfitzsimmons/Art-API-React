@@ -134,7 +134,7 @@
   border-radius: 0 0 18px;
   flex: 2;
   box-shadow: 6px -6px 18px 0px vars.$darkbluea;
-  min-height: 512px;
+  min-height: 562px;
   min-width: 200px;
   position: relative;
   circle {
@@ -152,8 +152,18 @@
 
 .map__container {
   width: 100%;
-  height: 512px;
+  height: 562px;
   z-index: 0;
+}
+
+.map__container__key {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+}
+
+.key__label {
+  margin: 0 2% 0 1%;
 }
 
 .leaflet-container {
@@ -171,8 +181,21 @@
 .map_icon:after {
   align-self: center;
   font-weight: bold;
-
   height: 3.6rem;
+}
+
+.map_icon__painting:after {
+  content: url('../assets/svg/address.svg');
+  color: rgba(37, 51, 64, 1);
+  margin-left: -0.5em;
+  margin-top: 1.6rem;
+}
+
+.map_icon__wiki:after {
+  margin-top: 1.2rem;
+  margin-left: -0.1rem;
+  content: url('../assets/svg/books.svg');
+  color: rgba(37, 51, 64, 1);
 }
 
 .map_icon__wiki {
@@ -187,10 +210,11 @@
 
 .map__paging_wrap {
   position: relative;
-  top: -90px;
+  bottom: 0;
   z-index: 99999;
   display: flex;
   justify-content: center;
+  margin-top: -91px;
 }
 
 .map__paging {

@@ -41,20 +41,22 @@ export function shuffle(array) {
 }
 
 export const countryLookup = {
-  Italian: 'italy',
-  French: 'france',
-  American: 'america',
-  Indian: 'india',
-  India: 'india',
-  Chinese: 'china',
-  Japanese: 'japan',
-  Dutch: 'netherlands',
-  German: 'germany',
-  Korean: 'korea',
-  Persian: 'persia',
-  British: 'britain',
-  Netherlandish: 'netherlands',
-  Russian: 'russia',
+  Italian: 'Italy',
+  French: 'France',
+  American: 'United States',
+  Indian: 'New Delhi',
+  India: 'New Delhi',
+  Chinese: 'Beijing',
+  Japanese: 'Japan',
+  Dutch: 'Netherlands',
+  German: 'Germany',
+  Korean: 'Seoul',
+  Persian: 'Iran',
+  British: 'Britain',
+  Netherlandish: 'Netherlands',
+  Russian: 'Moscow',
+  Spanish: 'Barcelona',
+  Nepalese: 'Nepal',
 }
 
 export const setStyle = (colors) => {
@@ -65,27 +67,34 @@ export const setStyle = (colors) => {
     gradient += colors[i].color
     gradient += i === 0 ? ')' : ', '
   }
-  document.body.style.background = `radial-gradient(circle at ${
+  document.body.style.backgroundImage = `radial-gradient(circle at ${
     ha[(Math.random() * 3) | 0]
   } ${va[(Math.random() * 3) | 0]}, ${gradient}`
 }
 
 export const placeNameForReverseGeo = (p) => {
   let birthplace =
-    p.people && p.people.length > 0 ? p.people[0].birthplace : null
+    p.people && p.people.length > 0 && p.people[0].birthplace
+      ? p.people[0].birthplace
+      : null
+  //console.log('b1: ', birthplace)
   if (birthplace) {
     birthplace =
       birthplace.length > 23 ? birthplace.split(' ').pop() : birthplace
+    //console.log('b2: ', birthplace)
   } else {
     if (p.culture) {
       birthplace = countryLookup[p.culture]
         ? countryLookup[p.culture]
         : p.culture.split(' ').shift()
+      // console.log('b3: ', birthplace)
     } else if (p.period) {
       birthplace = p.period.split(' ').shift()
+      // console.log('b4: ', birthplace)
     } else if (p.division) {
       birthplace =
         p.division.length > 23 ? p.division.split(' ').shift() : p.division
+      // console.log('b5: ', birthplace)
     }
   }
 

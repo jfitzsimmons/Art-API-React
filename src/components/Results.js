@@ -23,9 +23,19 @@ export default React.memo(function Results(props) {
   const [geoResultsI, setGeoResultsI] = useState(0)
 
   const getGeosNearPlaceName = useCallback(async () => {
-    fetch(`https://geocode.maps.co/search?q=${cityName}`, {
-      method: 'GET',
-    })
+    fetch(
+      `https://geocode.maps.co/search?q=${
+        cityName
+          .replace(/-.*, /, ' ')
+          .replace('(', ' ')
+          .replace('probably', '')
+          .replace(',', ' ')
+          .split('/')[0]
+      }`,
+      {
+        method: 'GET',
+      }
+    )
       .then((response) => response.json())
       .then((responseData) => {
         setGeoResultCoords(responseData)
