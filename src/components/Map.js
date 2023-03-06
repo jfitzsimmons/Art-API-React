@@ -76,10 +76,15 @@ export default React.memo(function Map(props) {
 
   return (
     <>
-      {coords && coords.length > 0 && wikicoords && wikicoords.length > 0 ? (
+      {(coords && coords.length > 0) ||
+      (wikicoords && wikicoords.length > 0) ? (
         <div className="map__container">
           <MapContainer
-            center={[coords[0].lat, coords[0].lon]}
+            center={
+              coords[0]
+                ? [coords[0].lat, coords[0].lon]
+                : [mapCenter.lat, mapCenter.lon]
+            }
             zoom={14}
             scrollWheelZoom={false}
             style={{ height: '100%', minHeight: '100%', width: '100%' }}
@@ -132,7 +137,15 @@ export default React.memo(function Map(props) {
           </div>
         </div>
       ) : (
-        <div></div>
+        <div>
+          <div className="render-coontainer">
+            <div className="painting flx-ctr fadein">
+              <svg className="loading" viewBox="25 25 50 50">
+                <circle cx="50" cy="50" r="20"></circle>
+              </svg>
+            </div>
+          </div>
+        </div>
       )}
     </>
   )
