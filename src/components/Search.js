@@ -13,7 +13,7 @@ const initialTitles = [
   'winter, spring, summer, fall',
   'earth, wind, fire, water',
   'moon, sun, stars, sky',
-  'heaven, hell, angel, demon',
+  'paradise, hell, angel, demon',
   'flowers, plants, trees, grass',
   'mountain, prairie, field, hill',
   'gathering, party, celebration, festive',
@@ -26,6 +26,16 @@ const initialTitles = [
   'music, melody, harmony, song',
   'street, path, road, trail',
   'drink, feast, merry, meal',
+  'school, work, play, sleep',
+  'birth, death, life, spirit',
+  'daughter, son, mother, daughter',
+  'horse, dog, cat, bird',
+  'tower, castle, bridge, fort',
+  'young, old, new, ancient',
+  'fox, deer, wild, forest',
+  'red, green, blue, yellow',
+  'front, back, left, right',
+  'figure, portrait, landscape, abstract',
 ]
 
 const initialTitle = initialTitles[(Math.random() * initialTitles.length) | 0]

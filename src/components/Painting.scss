@@ -19,6 +19,9 @@
   color: vars.$white-full;
   min-height: 60vh;
   padding: 2% 10px;
+  circle {
+    stroke: vars.$green;
+  }
 }
 
 .landscape_icon {
@@ -35,6 +38,7 @@
   max-width: 800px;
   max-height: 120vh;
   height: 100%;
+  text-align: center;
 }
 
 .frame__cell.right {
@@ -120,13 +124,17 @@
   }
 }
 .map {
-  background: vars.$darkbluea;
-  min-height: 512px;
-  flex: 2;
+  background: vars.$white-half;
   border-bottom: 4px solid vars.$blue;
   border-right: 3px solid vars.$blue;
   border-radius: 0 0 18px;
+  flex: 2;
   box-shadow: 6px -6px 18px 0px vars.$darkbluea;
+  min-height: 512px;
+  min-width: 200px;
+  circle {
+    stroke: vars.$blue;
+  }
 }
 
 .map__container {
