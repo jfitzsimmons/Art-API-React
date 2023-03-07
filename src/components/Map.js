@@ -91,7 +91,7 @@ export default React.memo(function Map(props) {
                 ? [coords[0].lat, coords[0].lon]
                 : [mapCenter.lat, mapCenter.lon]
             }
-            zoom={14}
+            zoom={15}
             scrollWheelZoom={false}
             style={{ height: '100%', minHeight: '100%', width: '100%' }}
           >

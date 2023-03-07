@@ -16,7 +16,6 @@ export default React.memo(function Wiki(props) {
 
   const getWikiData = useCallback(async () => {
     try {
-      console.log('try get articles')
       setIsLoading(true)
       const res = await fetch(
         `https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=coordinates|extracts&exchars=530&exintro=true&generator=geosearch&ggsradius=10000&ggscoord=${coords[geoResultsI].lat}|${coords[geoResultsI].lon}&formatversion=2&format=json`
@@ -32,9 +31,7 @@ export default React.memo(function Wiki(props) {
             lon: coordinates[0].lon,
           })
         )
-        console.log('mountedRef.current', mountedRef.current)
         if (!mountedRef.current) return null
-        console.log('pass fetch mounted check')
         setWikiResults(data.query.pages)
         setWikiCoords(cloned) //for map
       } else {

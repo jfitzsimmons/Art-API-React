@@ -15,10 +15,10 @@ export default React.memo(function Results(props) {
   const [page, setPage] = useState(0)
   const prevPage = usePrevious(page)
   const [returnError, setReturnError] = useState(false)
-  const [cityName, setCityName] = useState('')
+  const [cityName, setCityName] = useState()
   const prevCityName = usePrevious(cityName)
   const [mapCenter, setMapCenter] = useState({})
-  const [geoResultCoords, setGeoResultCoords] = useState()
+  const [geoResultCoords, setGeoResultCoords] = useState([])
   const [wikiCoords, setWikiCoords] = useState([])
   const [geoResultsI, setGeoResultsI] = useState(0)
 
@@ -46,35 +46,31 @@ export default React.memo(function Results(props) {
       })
   }, [cityName])
 
+  function loadPainting(p) {
+    setIsLoading(true)
+    setStyle(p.colors)
+    setCityName(placeNameForReverseGeo(p))
+  }
+
   useEffect(() => {
     if (page && page >= 0 && prevPage !== page && paintings[page]) {
+      loadPainting(paintings[page])
       //page through current painitngs
-      setIsLoading(true)
-      setStyle(paintings[page].colors)
-      setCityName(placeNameForReverseGeo(paintings[page]))
     } else if (page >= 0 && prevRecordsId !== paintings[0].id) {
       //new paintings from search
-      setIsLoading(true)
-      setStyle(paintings[0].colors)
-      setCityName(placeNameForReverseGeo(paintings[0]))
+      loadPainting(paintings[0])
       setPage(0)
     }
   }, [page, paintings, prevPage, prevRecordsId])
 
   useEffect(() => {
-    if (cityName && cityName !== '' && prevCityName !== cityName) {
+    if (cityName && prevCityName !== cityName) {
       //get coordinates around painting location
       getGeosNearPlaceName()
       //clean up conditional testjpf???
     } else if (
-      (cityName &&
-        cityName !== '' &&
-        prevCityName === cityName &&
-        prevResultsId !== resultsId) ||
-      (cityName &&
-        cityName !== '' &&
-        prevResultsId === resultsId &&
-        isLoading === true)
+      (cityName && prevCityName === cityName && prevResultsId !== resultsId) ||
+      (cityName && prevResultsId === resultsId && isLoading === true)
     ) {
       setIsLoading(false)
     }
@@ -86,7 +82,7 @@ export default React.memo(function Results(props) {
       {paintings && paintings.length > 0 && isLoading === false ? (
         <>
           <div className="painting__frame flx-ctr">
-            {paintings[page] && geoResultCoords && cityName !== '' && (
+            {paintings[page] && geoResultCoords && (
               <Painting
                 paintings={paintings}
                 cityName={cityName}
@@ -99,7 +95,7 @@ export default React.memo(function Results(props) {
             {paintings[page] &&
               geoResultCoords &&
               geoResultCoords.length > 0 &&
-              cityName !== '' && (
+              cityName && (
                 <Wiki
                   setWikiCoords={setWikiCoords}
                   setMapCenter={setMapCenter}
@@ -113,6 +109,8 @@ export default React.memo(function Results(props) {
             Wrong "america"??? next / prev | change wikiresults{' '}
             <p>Locations found for {cityName}:</p>*/}
               {page > -1 &&
+                mapCenter &&
+                mapCenter.lat &&
                 ((wikiCoords && wikiCoords.length > 0) ||
                   (geoResultCoords && geoResultCoords.length > 0)) && (
                   <Map

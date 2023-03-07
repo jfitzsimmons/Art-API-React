@@ -79,10 +79,14 @@ li {
   color: vars.$white-full;
   margin: vars.$btm-margin;
   text-align: center;
-  overflow: hidden;
   min-height: 5vh;
   max-width: 1400px;
-  max-height: calc(90px + 6vmin);
+  max-height: calc(90px + 7vmin);
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .search-error {
