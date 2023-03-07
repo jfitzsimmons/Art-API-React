@@ -25,10 +25,10 @@ const initialTitles = [
   'town, village, city, country',
   'music, melody, harmony, song',
   'street, path, road, trail',
-  'drink, feast, merry, meal',
+  'drink, feast, table, meal',
   'school, work, play, sleep',
   'birth, death, life, spirit',
-  'daughter, son, mother, daughter',
+  'daughter, son, mother, father',
   'horse, dog, cat, bird',
   'tower, castle, bridge, fort',
   'young, old, new, ancient',
@@ -36,6 +36,14 @@ const initialTitles = [
   'red, green, blue, yellow',
   'front, back, left, right',
   'figure, portrait, landscape, abstract',
+  'battle, peace, chief, prisoner',
+  'lion, tiger, elephant, serpent',
+  'fish, bay, boat, voyage',
+  'square, point, scene, row',
+  'one, two, three, four',
+  'five, six, seven, eight',
+  'day, morning, twilight, evening',
+  'pink, orange, violet, brown',
 ]
 
 const initialTitle = initialTitles[(Math.random() * initialTitles.length) | 0]
