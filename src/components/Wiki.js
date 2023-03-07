@@ -81,25 +81,6 @@ export default React.memo(function Wiki(props) {
     <div className="wiki">
       {wikiResults && wikiResults.length > 0 && isLoading === false ? (
         <div>
-          <div className="page">
-            {page + 1} of {wikiResults.length}
-            <br />
-            <button
-              className="prev"
-              onClick={() => setPage(page - 1)}
-              disabled={page === 0}
-            >
-              previous
-            </button>{' '}
-            |{' '}
-            <button
-              className="next"
-              onClick={() => setPage(page + 1)}
-              disabled={page === wikiResults.length - 1}
-            >
-              next
-            </button>
-          </div>
           <div className="wiki__results">
             <div className="label__title row">
               <p>
@@ -118,6 +99,25 @@ export default React.memo(function Wiki(props) {
               {': '}
               <span className="red">{wikiResults[page].title}</span>
             </span>
+            <div className="page">
+              {page + 1} of {wikiResults.length}
+              <br />
+              <button
+                className="prev"
+                onClick={() => setPage(page - 1)}
+                disabled={page === 0}
+              >
+                previous
+              </button>{' '}
+              |{' '}
+              <button
+                className="next"
+                onClick={() => setPage(page + 1)}
+                disabled={page === wikiResults.length - 1}
+              >
+                next
+              </button>
+            </div>
             <div
               dangerouslySetInnerHTML={{ __html: wikiResults[page].extract }}
             />

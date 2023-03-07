@@ -87,7 +87,7 @@ export default React.memo(function Painting(props) {
       paintings[page] &&
       cityName !== '' ? (
         <>
-          <div ref={labelRef} className="heading">
+          <div ref={labelRef} className="painting__heading">
             {paintings[page].title}
           </div>
           <div className="break"></div>
