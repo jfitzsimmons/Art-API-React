@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useDeferredValue,
+} from 'react'
 import './App.scss'
 import { Search } from './components/Search'
 import Results from './components/Results'
@@ -10,6 +15,7 @@ export default function App() {
   const [title, setTitle] = useState(null)
   const [records, setRecords] = useState({})
   const [resultsId, setResultsId] = useState(0)
+  const deferredRecords = useDeferredValue(records)
 
   // const [returnError, setReturnError] = useState(false)
 
@@ -45,8 +51,10 @@ export default function App() {
   return (
     <div id="App" className="App">
       <Search update={setTitle} />
-      {records && records[0] && (
-        <Results paintings={records} resultsId={resultsId} />
+      {deferredRecords && deferredRecords[0] && resultsId !== 0 && (
+        <>
+          <Results paintings={deferredRecords} resultsId={resultsId} />
+        </>
       )}
     </div>
   )

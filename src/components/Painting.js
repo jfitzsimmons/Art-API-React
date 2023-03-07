@@ -15,7 +15,7 @@ export default React.memo(function Painting(props) {
   function getWidth() {
     return `height=${Math.round(
       window.innerHeight * 1.2
-    )}&width=${Math.round(window.innerWidth * 0.56)}`
+    )}&width=${window.innerWidth < 632 ? Math.round(window.innerWidth * 0.56) : Math.round(window.innerWidth * 0.9)}`
   }
 
   const reloadImg = () => {

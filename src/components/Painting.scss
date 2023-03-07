@@ -10,6 +10,7 @@
 
 .painting__frame {
   flex-wrap: wrap;
+  backdrop-filter: saturate(160%);
   background: rgba(0, 0, 0, 0.4);
   border-left: 3px solid vars.$green;
   border-right: 3px solid vars.$green;
@@ -34,7 +35,7 @@
 }
 
 .frame__cell.left {
-  min-width: 400px;
+  min-width: 305px;
   max-width: 800px;
   max-height: 120vh;
   height: 100%;
@@ -143,6 +144,7 @@
 }
 
 .map::after {
+  color: vars.$darkgraya;
   content: '\275B...and so it goes.\275C';
   position: absolute;
   bottom: 6px;
@@ -171,7 +173,7 @@
 }
 
 .map_icon {
-  width: 40px;
+  min-width: 40px;
   height: 40px;
   border-radius: 30% 30% 80% 20%;
   display: flex;
