@@ -57,8 +57,6 @@ export const countryLookup = {
   Russian: 'Moscow',
   Spanish: 'Barcelona',
   Nepalese: 'Nepal',
-  Hurrian: 'Anatolia',
-  Byzantine: 'Istanbul',
 }
 
 export const setStyle = (colors) => {
@@ -82,21 +80,21 @@ export const placeNameForReverseGeo = (p) => {
   //console.log('b1: ', birthplace)
   if (birthplace) {
     birthplace =
-      birthplace.length > 20 ? birthplace.split(' ').pop() : birthplace
+      birthplace.length > 23 ? birthplace.split(' ').pop() : birthplace
     //console.log('b2: ', birthplace)
   } else {
     if (p.culture) {
       birthplace = countryLookup[p.culture]
         ? countryLookup[p.culture]
         : p.culture.split(' ').shift()
-      //console.log('b3: ', birthplace)
+      // console.log('b3: ', birthplace)
     } else if (p.period) {
       birthplace = p.period.split(' ').shift()
-      //console.log('b4: ', birthplace)
+      // console.log('b4: ', birthplace)
     } else if (p.division) {
       birthplace =
         p.division.length > 23 ? p.division.split(' ').shift() : p.division
-      //console.log('b5: ', birthplace)
+      // console.log('b5: ', birthplace)
     }
   }
 
