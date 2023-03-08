@@ -16,6 +16,8 @@
         "allowTaggedTemplates": false,
         "enforceForJSX": false
       }
-    ]
+    ],
+    "no-cond-assign": ["error", "except-parens"],
+    "no-plusplus": "off"
   }
 }

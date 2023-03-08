@@ -19,19 +19,17 @@ export function usePrevious(value) {
 }
 
 export function shuffle(array) {
+  const a = array
   let currentIndex = array.length
   let randomIndex
 
   while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex)
     currentIndex -= 1
-    ;[array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex],
-    ]
+    ;[a[currentIndex], a[randomIndex]] = [a[randomIndex], a[currentIndex]]
   }
 
-  return array
+  return a
 }
 
 export const countryLookup = {
@@ -63,7 +61,8 @@ export const setStyle = (colors) => {
     gradient += colors[i].color
     gradient += i === 0 ? ')' : ', '
   }
-  document.body.style.backgroundImage = `radial-gradient(circle at ${
+
+  document.body.style.background = `radial-gradient(circle at ${
     ha[(Math.random() * 3) | 0]
   } ${va[(Math.random() * 3) | 0]}, ${gradient}`
 }
