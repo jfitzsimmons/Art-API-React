@@ -86,9 +86,7 @@ export const placeNameForReverseGeo = (p) => {
     console.log('b2: ', birthplace)
   } else {
     if (p.culture) {
-      birthplace = countryLookup[p.culture]
-        ? countryLookup[p.culture]
-        : p.culture.split(' ').shift()
+      birthplace = p.culture
       console.log('b3: ', birthplace)
     } else if (p.period) {
       birthplace = p.period.split(' ').shift()

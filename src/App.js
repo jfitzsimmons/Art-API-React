@@ -13,9 +13,9 @@ const ART_API_KEY = `${process.env.REACT_APP_ART_API_KEY}`
 
 export default function App() {
   const [title, setTitle] = useState(null)
-  const [records, setRecords] = useState({})
-  const [resultsId, setResultsId] = useState(0)
-  const deferredRecords = useDeferredValue(records)
+  const [searchTrigger, setSearchTrigger] = useState(null)
+  const [recordsState, setRecordsState] = useState({ records: {}, id: '' })
+  const deferredRecordsState = useDeferredValue(recordsState)
 
   // const [returnError, setReturnError] = useState(false)
 
@@ -35,8 +35,10 @@ export default function App() {
     })
       .then((response) => response.json())
       .then((responseData) => {
-        setRecords(responseData.records)
-        setResultsId(makeid(6))
+        setRecordsState({
+          records: responseData.records,
+          id: makeid(6),
+        })
       })
       .catch((error) => {
         // setReturnError(true)
@@ -50,10 +52,14 @@ export default function App() {
 
   return (
     <div id="App" className="App">
-      <Search update={setTitle} />
-      {deferredRecords && deferredRecords[0] && resultsId !== 0 && (
+      <Search update={setTitle} searchTrigger={searchTrigger} />
+      {deferredRecordsState && deferredRecordsState.id !== 0 && (
         <>
-          <Results paintings={deferredRecords} resultsId={resultsId} />
+          <Results
+            paintings={deferredRecordsState.records}
+            resultsId={deferredRecordsState.id}
+            randomSearch={setSearchTrigger}
+          />
         </>
       )}
     </div>

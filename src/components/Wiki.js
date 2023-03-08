@@ -32,6 +32,7 @@ export default React.memo(function Wiki(props) {
           })
         )
         if (!mountedRef.current) return null
+
         setWikiResults(data.query.pages)
         setWikiCoords(cloned) //for map
       } else {
@@ -70,8 +71,8 @@ export default React.memo(function Wiki(props) {
   useEffect(() => {
     if (page > -1 && wikiResults && wikiResults.length > 0) {
       setMapCenter(wikiResults[page].coordinates[0])
-      setIsLoading(false)
     }
+    setIsLoading(false)
     return () => {
       mountedRef.current = false
     }
@@ -146,7 +147,7 @@ export default React.memo(function Wiki(props) {
               </div>
             ) : (
               <div className="no-results">
-                {coords[geoResultsI].display_name} did not return any results
+                {cityName} did not return any results
               </div>
             )}
           </div>
