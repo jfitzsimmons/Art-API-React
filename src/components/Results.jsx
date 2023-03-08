@@ -96,16 +96,14 @@ export default React.memo((props) => {
     <main className="main">
       {paintings && paintings.length > 0 && isLoading === false ? (
         <>
-          <div className="painting__frame flx-ctr">
-            {paintings[page] && geoResultCoords && (
-              <Painting
-                paintings={paintings}
-                cityName={cityName}
-                page={page}
-                setPage={setPage}
-              />
-            )}
-          </div>
+          {paintings[page] && geoResultCoords && (
+            <Painting
+              paintings={paintings}
+              cityName={cityName}
+              page={page}
+              setPage={setPage}
+            />
+          )}
           <div className="map-wiki flx-ctr wrap">
             {geoResultCoords && geoResultCoords.length > 0 && cityName && (
               <Wiki
@@ -140,17 +138,30 @@ export default React.memo((props) => {
           )}
           {isLoading ? (
             <div className="painting flx-ctr fadein">
-              <svg className="loading" viewBox="25 25 50 50">
-                <circle cx="50" cy="50" r="20" />
+              <svg
+                className="loading"
+                viewBox="25 25 50 50"
+              >
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="20"
+                />
               </svg>
             </div>
           ) : (
             <div className="no_results">
               <p>These tags did not return any results</p>
-              <button type="button" onClick={() => randomSearch(makeid(6))}>
+              <button
+                type="button"
+                onClick={() => randomSearch(makeid(6))}
+              >
                 random
                 <br />
-                <img src={RandomIcon} alt="random search term icon" />
+                <img
+                  src={RandomIcon}
+                  alt="random search term icon"
+                />
               </button>
             </div>
           )}

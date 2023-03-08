@@ -5,7 +5,29 @@ import { usePrevious } from '../utils/helpers'
 
 const markerRefs = []
 
-export default React.memo(function Map(props) {
+const Post = memo(({ place, iconClass }) => {
+  const newRef = createRef()
+  markerRefs.push(newRef)
+  return (
+    <Marker
+      key={place.place_id}
+      position={[place.lat, place.lon]}
+      // eventHandlers={{ click: () => showPreview(place) }}
+      icon={L.divIcon({
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
+        popupAnchor: [0, 0],
+        shadowSize: [0, 0],
+        className: `map_icon ${iconClass}`,
+      })}
+      ref={newRef}
+    >
+      <Tooltip>{place.display_name}</Tooltip>
+    </Marker>
+  )
+})
+
+export default React.memo((props) => {
   const { coords, wikiMapCenter, wikicoords, setGeoResultsI, paintingPage } =
     props
   const [page, setPage] = useState(0)
@@ -13,42 +35,17 @@ export default React.memo(function Map(props) {
   const prevPage = usePrevious(page)
   const prevPaintingPage = usePrevious(paintingPage)
 
-  const renderItems = (coords, icon) => {
-    return (
-      coords &&
-      coords.map((place) => (
-        <Post
-          iconClass={`map_icon__${icon}`}
-          key={place.place_id}
-          place={place}
-        />
-      ))
-    )
-  }
-
-  const Post = memo(({ place, iconClass }) => {
-    const newRef = createRef()
-    markerRefs.push(newRef)
-    return (
-      <Marker
+  const renderItems = (coords, icon) =>
+    coords &&
+    coords.map((place) => (
+      <Post
+        iconClass={`map_icon__${icon}`}
         key={place.place_id}
-        position={[place.lat, place.lon]}
-        //eventHandlers={{ click: () => showPreview(place) }}
-        icon={L.divIcon({
-          iconSize: [40, 40],
-          iconAnchor: [20, 20],
-          popupAnchor: [0, 0],
-          shadowSize: [0, 0],
-          className: `map_icon ${iconClass}`,
-        })}
-        ref={newRef}
-      >
-        <Tooltip>{place.display_name}</Tooltip>
-      </Marker>
-    )
-  })
+        place={place}
+      />
+    ))
 
-  const RecenterAutomatically = ({ lat, lon }) => {
+  function RecenterAutomatically({ lat, lon }) {
     const map = useMap()
     useEffect(() => {
       map.setView([lat, lon])
@@ -77,9 +74,9 @@ export default React.memo(function Map(props) {
   return (
     <>
       <div className="map__container__key">
-        <div className="map_icon map_icon__painting"></div>
+        <div className="map_icon map_icon__painting" />
         <div className="key__label">Address</div>
-        <div className="map_icon map_icon__wiki"></div>
+        <div className="map_icon map_icon__wiki" />
         <div className="key__label">Article</div>
       </div>
       {(coords && coords.length > 0) ||
@@ -105,7 +102,7 @@ export default React.memo(function Map(props) {
                 coords.length > 0 &&
                 renderItems(
                   coords,
-                  'painting'
+                  'painting',
                 ) /** coordinates from geo search */
             }
             {
@@ -113,11 +110,14 @@ export default React.memo(function Map(props) {
                 wikicoords.length > 0 &&
                 renderItems(
                   wikicoords,
-                  'wiki'
+                  'wiki',
                 ) /** coordinates from wiki articles */
             }
             {mapCenter.lat && (
-              <RecenterAutomatically lat={mapCenter.lat} lon={mapCenter.lon} />
+              <RecenterAutomatically
+                lat={mapCenter.lat}
+                lon={mapCenter.lon}
+              />
             )}
           </MapContainer>
           <div className="map__paging_wrap">
@@ -125,6 +125,7 @@ export default React.memo(function Map(props) {
               {page + 1} of {coords.length}
               <br />
               <button
+                type="button"
                 className="prev"
                 onClick={() => setPage(page - 1)}
                 disabled={page === 0}
@@ -133,6 +134,7 @@ export default React.memo(function Map(props) {
               </button>{' '}
               |{' '}
               <button
+                type="button"
                 className="next"
                 onClick={() => setPage(page + 1)}
                 disabled={page === coords.length - 1}
@@ -146,8 +148,15 @@ export default React.memo(function Map(props) {
         <div>
           <div className="render-coontainer">
             <div className="painting flx-ctr fadein">
-              <svg className="loading" viewBox="25 25 50 50">
-                <circle cx="50" cy="50" r="20"></circle>
+              <svg
+                className="loading"
+                viewBox="25 25 50 50"
+              >
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="20"
+                />
               </svg>
             </div>
           </div>
