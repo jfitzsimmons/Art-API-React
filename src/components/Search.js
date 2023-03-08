@@ -44,6 +44,7 @@ const initialTitles = [
   'five, six, seven, eight',
   'day, morning, twilight, evening',
   'pink, orange, violet, brown',
+  'train, wagon, walk, fly',
 ]
 
 const initialTitle = initialTitles[(Math.random() * initialTitles.length) | 0]
@@ -218,6 +219,12 @@ export class Search extends Component {
       '<span class="bottom line"></span><span class="right line"></span><span class="top line"></span><span class="left line"></span>'
     )
     this.props.update(this.setTagList())
+  }
+
+  componentDidUpdate(prevProps) {
+    this.props.searchTrigger &&
+      prevProps.searchTrigger !== this.props.searchTrigger &&
+      this.randomSearch()
   }
 
   handleDelete(i) {

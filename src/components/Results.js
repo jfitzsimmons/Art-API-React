@@ -2,14 +2,20 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Wiki from './Wiki'
 import Map from './Map'
 import Painting from './Painting'
-import { usePrevious, placeNameForReverseGeo, setStyle } from '../utils/helpers'
+import {
+  usePrevious,
+  placeNameForReverseGeo,
+  setStyle,
+  makeid,
+  countryLookup,
+} from '../utils/helpers'
 import './Painting.scss'
+import RandomIcon from '../assets/svg/random.svg'
 
 //testjpf make it so if you click on marker it takes you to that "page" in pagination for wiki result
 
 export default React.memo(function Results(props) {
-  const { paintings, resultsId } = props
-  const prevRecordsId = usePrevious(paintings[0].id)
+  const { paintings, resultsId, randomSearch } = props
   const prevResultsId = usePrevious(resultsId)
   const [isLoading, setIsLoading] = useState(true)
   const [page, setPage] = useState(0)
@@ -23,19 +29,17 @@ export default React.memo(function Results(props) {
   const [geoResultsI, setGeoResultsI] = useState(0)
 
   const getGeosNearPlaceName = useCallback(async () => {
-    fetch(
-      `https://geocode.maps.co/search?q=${
-        cityName
-          .replace(/-.*, /, ' ')
-          .replace('(', ' ')
-          .replace('probably', '')
-          .replace(',', ' ')
-          .split('/')[0]
-      }`,
-      {
-        method: 'GET',
-      }
-    )
+    let city = countryLookup[cityName] ? countryLookup[cityName] : cityName
+    city = city
+      .replace(/-.*, /, ' ')
+      .replace('(', ' ')
+      .replace('probably', '')
+      .replace(',', ' ')
+      .split('/')[0]
+
+    fetch(`https://geocode.maps.co/search?q=${city}`, {
+      method: 'GET',
+    })
       .then((response) => response.json())
       .then((responseData) => {
         setGeoResultCoords(responseData)
@@ -56,12 +60,16 @@ export default React.memo(function Results(props) {
     if (page && page >= 0 && prevPage !== page && paintings[page]) {
       loadPainting(paintings[page])
       //page through current painitngs
-    } else if (page >= 0 && prevRecordsId !== paintings[0].id) {
+    } else if (
+      page >= 0 &&
+      prevResultsId !== resultsId &&
+      paintings.length > 0
+    ) {
       //new paintings from search
       loadPainting(paintings[0])
       setPage(0)
     }
-  }, [page, paintings, prevPage, prevRecordsId])
+  }, [page, paintings, prevPage, prevResultsId, resultsId])
 
   useEffect(() => {
     if (cityName && prevCityName !== cityName) {
@@ -92,22 +100,16 @@ export default React.memo(function Results(props) {
             )}
           </div>
           <div className="map-wiki flx-ctr wrap">
-            {paintings[page] &&
-              geoResultCoords &&
-              geoResultCoords.length > 0 &&
-              cityName && (
-                <Wiki
-                  setWikiCoords={setWikiCoords}
-                  setMapCenter={setMapCenter}
-                  cityName={cityName}
-                  coords={geoResultCoords}
-                  geoResultsI={geoResultsI}
-                />
-              )}
+            {geoResultCoords && geoResultCoords.length > 0 && cityName && (
+              <Wiki
+                setWikiCoords={setWikiCoords}
+                setMapCenter={setMapCenter}
+                cityName={cityName}
+                coords={geoResultCoords}
+                geoResultsI={geoResultsI}
+              />
+            )}
             <div className="map">
-              {/** 
-            Wrong "america"??? next / prev | change wikiresults{' '}
-            <p>Locations found for {cityName}:</p>*/}
               {page > -1 &&
                 mapCenter &&
                 mapCenter.lat &&
@@ -136,8 +138,13 @@ export default React.memo(function Results(props) {
               </svg>
             </div>
           ) : (
-            <div className="no-results">
-              These tags did not return any results
+            <div className="no_results">
+              <p>These tags did not return any results</p>
+              <button onClick={() => randomSearch(makeid(6))}>
+                random
+                <br />
+                <img src={RandomIcon} alt="random search term icon" />
+              </button>
             </div>
           )}
         </div>

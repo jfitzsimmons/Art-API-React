@@ -45,6 +45,16 @@ li {
   padding: 2%;
 }
 
+.no_results {
+  font-size: calc(1rem + 3vh);
+  text-align: center;
+  padding: 6%;
+
+  button {
+    margin: 6% 0;
+  }
+}
+
 .search {
   text-align: center;
   display: flex;
