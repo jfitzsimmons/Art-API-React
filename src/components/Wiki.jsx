@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { usePrevious } from '../utils/helpers'
 
-export default React.memo(function Wiki(props) {
+export default React.memo((props) => {
   const { cityName, coords, setMapCenter, setWikiCoords, geoResultsI } = props
   const [page, setPage] = useState(0)
   const [returnError, setReturnError] = useState(false)
@@ -12,13 +12,13 @@ export default React.memo(function Wiki(props) {
   const prevGeoResultsI = usePrevious(geoResultsI)
   const mountedRef = useRef(true)
 
-  //const [returnError, setReturnError] = useState(false)
+  // const [returnError, setReturnError] = useState(false)
 
   const getWikiData = useCallback(async () => {
     try {
       setIsLoading(true)
       const res = await fetch(
-        `https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=coordinates|extracts&exchars=530&exintro=true&generator=geosearch&ggsradius=10000&ggscoord=${coords[geoResultsI].lat}|${coords[geoResultsI].lon}&formatversion=2&format=json`
+        `https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=coordinates|extracts&exchars=530&exintro=true&generator=geosearch&ggsradius=10000&ggscoord=${coords[geoResultsI].lat}|${coords[geoResultsI].lon}&formatversion=2&format=json`,
       )
       const data = await res.json()
 
@@ -29,12 +29,12 @@ export default React.memo(function Wiki(props) {
             place_id: pageid,
             lat: coordinates[0].lat,
             lon: coordinates[0].lon,
-          })
+          }),
         )
         if (!mountedRef.current) return null
 
         setWikiResults(data.query.pages)
-        setWikiCoords(cloned) //for map
+        setWikiCoords(cloned) // for map
       } else {
         setWikiResults([])
       }
@@ -44,6 +44,7 @@ export default React.memo(function Wiki(props) {
     } finally {
       setIsLoading(false)
     }
+    return null
   }, [coords, geoResultsI, setWikiCoords])
 
   useEffect(() => {
@@ -64,15 +65,16 @@ export default React.memo(function Wiki(props) {
         prevCityName !== cityName) ||
       (prevGeoResultsI !== undefined && prevGeoResultsI !== geoResultsI)
     ) {
-      setPage(0) //reset on painting change
+      setPage(0) // reset on painting change
     }
   }, [cityName, geoResultsI, page, prevCityName, prevGeoResultsI, prevPage])
 
   useEffect(() => {
     if (page > -1 && wikiResults && wikiResults.length > 0) {
       setMapCenter(wikiResults[page].coordinates[0])
+      setIsLoading(false)
     }
-    setIsLoading(false)
+
     return () => {
       mountedRef.current = false
     }
@@ -104,6 +106,7 @@ export default React.memo(function Wiki(props) {
               {page + 1} of {wikiResults.length}
               <br />
               <button
+                type="button"
                 className="prev"
                 onClick={() => setPage(page - 1)}
                 disabled={page === 0}
@@ -112,6 +115,7 @@ export default React.memo(function Wiki(props) {
               </button>{' '}
               |{' '}
               <button
+                type="button"
                 className="next"
                 onClick={() => setPage(page + 1)}
                 disabled={page === wikiResults.length - 1}
@@ -140,8 +144,15 @@ export default React.memo(function Wiki(props) {
             {isLoading ? (
               <div className="painting flx-ctr">
                 <div>
-                  <svg className="loading" viewBox="25 25 50 50">
-                    <circle cx="50" cy="50" r="20"></circle>
+                  <svg
+                    className="loading"
+                    viewBox="25 25 50 50"
+                  >
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="20"
+                    />
                   </svg>
                 </div>
               </div>

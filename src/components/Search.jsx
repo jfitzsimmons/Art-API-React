@@ -51,7 +51,7 @@ const initialTitle = initialTitles[(Math.random() * initialTitles.length) | 0]
 
 const generateInitialTags = (t) => {
   const outputTags = []
-  t.split(/\s*,\s*/).forEach(function (term) {
+  t.split(/\s*,\s*/).forEach((term) => {
     outputTags.push({
       id: term,
       text: term.charAt(0).toUpperCase() + term.slice(1),
@@ -62,7 +62,7 @@ const generateInitialTags = (t) => {
 
 const initialTags = generateInitialTags(initialTitle)
 
-export class Search extends Component {
+export default class Search extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -208,97 +208,105 @@ export class Search extends Component {
     this.randomSearch = this.randomSearch.bind(this)
   }
 
-  setTagList() {
-    return Array.prototype.map.call(this.state.tags, (t) => t.text).toString()
-  }
-
   componentDidMount() {
-    let node = document.querySelector('.ReactTags__tagInputField')
+    const { update } = this.props
+    const node = document.querySelector('.ReactTags__tagInputField')
     node.insertAdjacentHTML(
       'afterend',
-      '<span class="bottom line"></span><span class="right line"></span><span class="top line"></span><span class="left line"></span>'
+      '<span class="bottom line"></span><span class="right line"></span><span class="top line"></span><span class="left line"></span>',
     )
-    this.props.update(this.setTagList())
+    update(this.setTagList())
   }
 
   componentDidUpdate(prevProps) {
-    this.props.searchTrigger &&
-      prevProps.searchTrigger !== this.props.searchTrigger &&
+    const { searchTrigger } = this.props
+    searchTrigger &&
+      prevProps.searchTrigger !== searchTrigger &&
       this.randomSearch()
   }
 
   handleDelete(i) {
     const { tags } = this.state
+    const { update } = this.props
     this.setState(
       {
         tags: tags.filter((tag, index) => index !== i),
       },
       () => {
-        this.props.update(this.setTagList())
-      }
+        update(this.setTagList())
+      },
     )
   }
 
   handleAddition(tag) {
+    const { update } = this.props
     this.setState(
       (state) => ({ tags: [...state.tags, tag] }),
       () => {
-        this.props.update(this.setTagList())
-      }
+        update(this.setTagList())
+      },
     )
   }
 
   handleDrag(tag, currPos, newPos) {
-    const tags = [...this.state.tags]
+    const { tags } = this.state
     const newTags = tags.slice()
     newTags.splice(currPos, 1)
     newTags.splice(newPos, 0, tag)
     this.setState({ tags: newTags })
   }
 
+  setTagList() {
+    const { tags } = this.state
+    return Array.prototype.map.call(tags, (t) => t.text).toString()
+  }
+
   randomSearch() {
     this.setState(
       {
         tags: generateInitialTags(
-          initialTitles[(Math.random() * initialTitles.length) | 0]
+          initialTitles[(Math.random() * initialTitles.length) | 0],
         ),
       },
       () => {
-        this.props.update(this.setTagList())
-      }
+        const { update } = this.props
+        update(this.setTagList())
+      },
     )
   }
 
   render() {
     const { tags, suggestions } = this.state
     return (
-      <>
-        <div className="search">
-          <div className="search__tags flx-ctr">
-            <button
-              className="search__random_btn"
-              onClick={() => this.randomSearch()}
-            >
-              <img src={RandomIcon} alt="random search term icon" />
-            </button>
-            <ReactTags
-              tags={tags}
-              suggestions={suggestions}
-              handleDelete={this.handleDelete}
-              handleAddition={this.handleAddition}
-              handleDrag={this.handleDrag}
-              delimiters={delimiters}
-              onChange={this.handleAddition}
-              autofocus={false}
+      <div className="search">
+        <div className="search__tags flx-ctr">
+          <button
+            type="button"
+            className="search__random_btn"
+            onClick={() => this.randomSearch()}
+          >
+            <img
+              src={RandomIcon}
+              alt="random search term icon"
             />
-          </div>
-          <div className="break"></div>
-          <div className="search__art_terms">
-            Enter terms to search through the <b>Harvard Art Museums</b>'
-            collections
-          </div>
+          </button>
+          <ReactTags
+            tags={tags}
+            suggestions={suggestions}
+            handleDelete={this.handleDelete}
+            handleAddition={this.handleAddition}
+            handleDrag={this.handleDrag}
+            delimiters={delimiters}
+            onChange={this.handleAddition}
+            autofocus={false}
+          />
         </div>
-      </>
+        <div className="break" />
+        <div className="search__art_terms">
+          Enter terms to search through the <b>Harvard Art Museums</b>'
+          collections
+        </div>
+      </div>
     )
   }
 }

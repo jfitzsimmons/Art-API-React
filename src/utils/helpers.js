@@ -1,18 +1,12 @@
 import { useEffect, useRef } from 'react'
 
-export function paginate(direction) {
-  this.setState((prevState) => {
-    return { page: (prevState.page += direction) }
-  })
-}
-
 export const objToQueryString = (obj) => {
   const keyValuePairs = []
-  for (const key in obj) {
+  Object.keys(obj).forEach((key) => {
     keyValuePairs.push(
-      encodeURIComponent(key) + '=' + encodeURIComponent(obj[key])
+      `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`,
     )
-  }
+  })
   return keyValuePairs.join('&')
 }
 
@@ -25,12 +19,12 @@ export function usePrevious(value) {
 }
 
 export function shuffle(array) {
-  let currentIndex = array.length,
-    randomIndex
+  let currentIndex = array.length
+  let randomIndex
 
   while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex)
-    currentIndex--
+    currentIndex -= 1
     ;[array[currentIndex], array[randomIndex]] = [
       array[randomIndex],
       array[currentIndex],
@@ -79,27 +73,25 @@ export const placeNameForReverseGeo = (p) => {
     p.people && p.people.length > 0 && p.people[0].birthplace
       ? p.people[0].birthplace
       : null
-  //console.log('b1: ', birthplace)
+  // console.log('b1: ', birthplace)
   if (birthplace) {
     birthplace =
       birthplace.length > 20 ? birthplace.split(' ').pop() : birthplace
-    //console.log('b2: ', birthplace)
-  } else {
-    if (p.culture) {
-      birthplace = p.culture
-      //console.log('b3: ', birthplace)
-    } else if (p.period) {
-      birthplace = p.period.split(' ').shift()
-      //console.log('b4: ', birthplace)
-    } else if (p.division) {
-      birthplace =
-        p.division.length > 23 ? p.division.split(' ').shift() : p.division
-      //console.log('b5: ', birthplace)
-    }
+    // console.log('b2: ', birthplace)
+  } else if (p.culture) {
+    birthplace = p.culture
+    // console.log('b3: ', birthplace)
+  } else if (p.period) {
+    birthplace = p.period.split(' ').shift()
+    // console.log('b4: ', birthplace)
+  } else if (p.division) {
+    birthplace =
+      p.division.length > 23 ? p.division.split(' ').shift() : p.division
+    // console.log('b5: ', birthplace)
   }
 
   if (!birthplace) console.log(p)
-  return birthplace
+  return birthplace.replace('?', '')
 }
 
 export function makeid(length) {

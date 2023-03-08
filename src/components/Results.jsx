@@ -12,9 +12,10 @@ import {
 import './Painting.scss'
 import RandomIcon from '../assets/svg/random.svg'
 
-//testjpf make it so if you click on marker it takes you to that "page" in pagination for wiki result
+// testjpf make it so if you click on marker
+// it takes you to that "page" in pagination for wiki result
 
-export default React.memo(function Results(props) {
+export default React.memo((props) => {
   const { paintings, resultsId, randomSearch } = props
   const prevResultsId = usePrevious(resultsId)
   const [isLoading, setIsLoading] = useState(true)
@@ -35,9 +36,8 @@ export default React.memo(function Results(props) {
       .replace('(', ' ')
       .replace('probably', '')
       .replace(',', ' ')
-      .split('/')[0]
 
-    fetch(`https://geocode.maps.co/search?q=${city}`, {
+    fetch(`https://geocode.maps.co/search?q=${city.split('/')[0]}`, {
       method: 'GET',
     })
       .then((response) => response.json())
@@ -59,13 +59,13 @@ export default React.memo(function Results(props) {
   useEffect(() => {
     if (page && page >= 0 && prevPage !== page && paintings[page]) {
       loadPainting(paintings[page])
-      //page through current painitngs
+      // page through current painitngs
     } else if (
       page >= 0 &&
       prevResultsId !== resultsId &&
       paintings.length > 0
     ) {
-      //new paintings from search
+      // new paintings from search
       loadPainting(paintings[0])
       setPage(0)
     }
@@ -73,18 +73,25 @@ export default React.memo(function Results(props) {
 
   useEffect(() => {
     if (cityName && prevCityName !== cityName) {
-      //get coordinates around painting location
+      // get coordinates around painting location
       getGeosNearPlaceName()
-      //clean up conditional testjpf???
+      // clean up conditional testjpf???
     } else if (
       (cityName && prevCityName === cityName && prevResultsId !== resultsId) ||
       (cityName && prevResultsId === resultsId && isLoading === true)
     ) {
       setIsLoading(false)
     }
-  }, [cityName, getGeosNearPlaceName, isLoading, prevCityName, prevResultsId, resultsId])
+  }, [
+    cityName,
+    getGeosNearPlaceName,
+    isLoading,
+    prevCityName,
+    prevResultsId,
+    resultsId,
+  ])
 
-  //Testjpf abstract error component
+  // Testjpf abstract error component
   return (
     <main className="main">
       {paintings && paintings.length > 0 && isLoading === false ? (
@@ -134,13 +141,13 @@ export default React.memo(function Results(props) {
           {isLoading ? (
             <div className="painting flx-ctr fadein">
               <svg className="loading" viewBox="25 25 50 50">
-                <circle cx="50" cy="50" r="20"></circle>
+                <circle cx="50" cy="50" r="20" />
               </svg>
             </div>
           ) : (
             <div className="no_results">
               <p>These tags did not return any results</p>
-              <button onClick={() => randomSearch(makeid(6))}>
+              <button type="button" onClick={() => randomSearch(makeid(6))}>
                 random
                 <br />
                 <img src={RandomIcon} alt="random search term icon" />
