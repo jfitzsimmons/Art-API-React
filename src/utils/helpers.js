@@ -79,22 +79,22 @@ export const placeNameForReverseGeo = (p) => {
     p.people && p.people.length > 0 && p.people[0].birthplace
       ? p.people[0].birthplace
       : null
-  console.log('b1: ', birthplace)
+  //console.log('b1: ', birthplace)
   if (birthplace) {
     birthplace =
       birthplace.length > 20 ? birthplace.split(' ').pop() : birthplace
-    console.log('b2: ', birthplace)
+    //console.log('b2: ', birthplace)
   } else {
     if (p.culture) {
       birthplace = p.culture
-      console.log('b3: ', birthplace)
+      //console.log('b3: ', birthplace)
     } else if (p.period) {
       birthplace = p.period.split(' ').shift()
-      console.log('b4: ', birthplace)
+      //console.log('b4: ', birthplace)
     } else if (p.division) {
       birthplace =
         p.division.length > 23 ? p.division.split(' ').shift() : p.division
-      console.log('b5: ', birthplace)
+      //console.log('b5: ', birthplace)
     }
   }
 
