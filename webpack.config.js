@@ -5,6 +5,7 @@ const Dotenv = require('dotenv-webpack')
 
 module.exports = (env, argv) => ({
   mode: 'production',
+  entry: './src/index.tsx',
   output: {
     path: path.join(__dirname, '/build'),
     filename: '[name].[contenthash].js',
@@ -19,7 +20,7 @@ module.exports = (env, argv) => ({
     new CleanWebpackPlugin(),
   ],
   resolve: {
-    extensions: ['.ts', '.js', '.tsx', '...'],
+    extensions: ['.ts', '.js', '.tsx', '.jsx', '...'],
   },
   optimization: {
     splitChunks: {
@@ -42,6 +43,11 @@ module.exports = (env, argv) => ({
         use: {
           loader: 'babel-loader',
         },
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: ['ts-loader'],
       },
       {
         test: /\.(css|sass|scss)$/i,

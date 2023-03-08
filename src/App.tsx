@@ -5,7 +5,7 @@ import React, {
   useDeferredValue,
 } from 'react'
 import './App.scss'
-import { Search } from './components/Search'
+import Search from './components/Search'
 import Results from './components/Results'
 import { objToQueryString, makeid } from './utils/helpers'
 
@@ -53,9 +53,9 @@ export default function App() {
   return (
     <div id="App" className="App">
       <Search update={setTitle} searchTrigger={searchTrigger} />
-      {deferredRecordsState && deferredRecordsState.id !== 0 && (
+      {deferredRecordsState && deferredRecordsState.id !== '' && (
         <>
-          <Results
+          <Results //@ts-ignore
             paintings={deferredRecordsState.records}
             resultsId={deferredRecordsState.id}
             randomSearch={setSearchTrigger}
