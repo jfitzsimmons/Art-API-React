@@ -13,7 +13,7 @@ const ART_API_KEY = `${process.env.REACT_APP_ART_API_KEY}`
 
 export default function App() {
   const [title, setTitle] = useState(null)
-  const [searchTrigger, setSearchTrigger] = useState(null)
+  const [searchTrigger, setSearchTrigger] = useState<string | null>(null)
   const [recordsState, setRecordsState] = useState({ records: {}, id: '' })
   const deferredRecordsState = useDeferredValue(recordsState)
 
@@ -51,8 +51,14 @@ export default function App() {
   }, [fetchPaintingData, title])
 
   return (
-    <div id="App" className="App">
-      <Search update={setTitle} searchTrigger={searchTrigger} />
+    <div
+      id="App"
+      className="App"
+    >
+      <Search
+        update={setTitle}
+        searchTrigger={searchTrigger}
+      />
       {deferredRecordsState && deferredRecordsState.id !== '' && (
         <>
           <Results //@ts-ignore
